@@ -4,15 +4,15 @@ Static browser app: no visitor login, backend, or data upload. Run by double-cli
 
 ## Current assumptions
 
-- Two independent arrival streams: left 120/min, right 80/min; 20 Hz Poisson increments.
+- Two independent NHPP arrival streams: initial left 120/min, right 80/min; rate(t) = rate(0) × 2^(−t/H), with default half-life H=20 minutes. Exact rate integrals determine 20 Hz Poisson increments. At 20 minutes the rates are 60/min and 40/min. Default replay duration is 40 minutes.
 - Four lifts per side, initially staggered. Round-trip cycles: truncated normal with means 40/200 seconds, standard deviations 4/20 seconds, lower bound 10 seconds.
 - Five-second boarding window; boarding is recorded at closing. Each trip samples integer capacity C−4…C with normal-shaped weights centered at C−2 (standard deviation 1); capacity never falls below one. No A1 occupancy deduction.
-- Route geometry follows the schematic in original image pixels. Default 0.025 m/pixel and walking speed 1.3 m/s are adjustable assumptions, not field measurements. Queue positions beyond image bounds are clipped.
+- Select Side A (upper left) or Side B (right) as the departure origin. Route geometry follows the schematic in original image pixels. Default 0.025 m/pixel and walking speed 1.3 m/s are adjustable assumptions, not field measurements. Queue positions beyond image bounds are clipped.
 - Recommendations compare walking plus time until boarding, excluding the subsequent ride. Full queue information is assumed; Bayesian occlusion and QRE are not implemented.
 
 ## Million-trial experiment
 
-The button starts exactly 1,000,000 independent conditional route-choice trials in a Web Worker. It freezes the current replay time, right queue length, and eight lift departure schedules. Left queue length is sampled uniformly from 0 through a configurable maximum. Future arrivals before joining are Poisson; capacities and subsequent cycles use the same distributions as playback. New arrivals after joining are behind the tagged passenger (FCFS).
+The button starts exactly 1,000,000 independent conditional route-choice trials in a Web Worker. It freezes the current replay time, right queue length, and eight lift departure schedules. Left queue length is sampled uniformly from 0 through a configurable maximum. Future arrivals before joining use NHPP integrals at the absolute snapshot time and continue decaying during the walk; capacities and subsequent cycles use the same distributions as playback. New arrivals after joining are behind the tagged passenger (FCFS).
 
 The plot shows P(left faster | visible left queue length) with 95% Wilson intervals, not the empirical distribution of naturally occurring queue lengths. Ties are counted separately. This is not one million full-duration animations. CSV exports include the seed, parameters, snapshot, sample counts, probabilities and mean travel-to-boarding times. Changing parameters requires rerunning the experiment.
 
@@ -23,3 +23,5 @@ Double-click `publish.command` after installing the official GitHub CLI (`brew i
 Alternative repository name: `bash publish.command another-repo-name`. Later runs update the same export checkout. The neighbouring course plans and reports are not published.
 
 References: https://docs.github.com/en/rest/pages/pages and https://cli.github.com/manual/gh_repo_create.
+
+Walking speed is constant for both entry viewpoints; no crowd-density slowdown is applied. Switching viewpoint changes route comparisons and Monte Carlo walking distances, but does not reroute the preassigned independent queue arrival streams.
