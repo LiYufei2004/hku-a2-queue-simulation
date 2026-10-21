@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict'),M=require('../model-core.js');
+const p={seed:'test',duration:1200,rate:[2,80/60],pulses:[{start:60,end:180,add:1}],walkModel:'document',spacing:.45,beta:.05,speed:1.3,scale:.025,cap:[20,20],cycle:[40,200],std:[4,20],lifts:4,sample:5,window:300};
+assert.equal(M.rateAt(p,0,0),2);assert.equal(M.rateAt(p,0,60),3);assert.equal(M.rateAt(p,0,180),2);assert.equal(M.arrivalMean(p,0,0,200),520);assert.equal(M.arrivalMean(p,0,0,100)+M.arrivalMean(p,0,100,200),520);
+assert.equal(M.logit(10,20,0),.5);assert(M.logit(10,20,1)>.99);assert(M.logit(20,10,1)<.01);assert.equal(M.logit(0,1e9,1),1);assert.equal(M.logit(1e9,0,1),0);
+assert.equal(M.walkRoute('A',0,[10,20],p).seconds,0);assert.equal(M.walkRoute('B',1,[10,20],p).seconds,0);assert(M.walkRoute('A',1,[10,20],p).seconds>0);assert.equal(M.walkRoute('A',1,[10,20],p).seconds,M.walkRoute('B',0,[10,20],p).seconds);
+assert(Math.abs(M.walkRoute('A',1,[10,20],p).seconds-.45*30/1.3)<1e-9);let e=new M.Engine(p),counts=0;const tables={};for(let t=0;t<=p.duration;t+=5){e.advance(t);const s=e.snapshot();for(let i=0;i<2;i++){assert.equal(s.selected[i],s.q[i]+s.transit[i]+s.served[i]);assert(s.wait[i]>=0);for(const l of s.lifts[i]){assert(l.capacity>=16&&l.capacity<=20);assert(l.loaded<=l.capacity)}}assert.equal(s.arrivals[0]+s.arrivals[1],s.selected[0]+s.selected[1]);if(t>0){M.collectSample(tables,s,p);counts++}}
+assert(e.choice[0][1]>0&&e.choice[1][0]>0,'both origins must switch queues');assert.equal(Object.values(tables).reduce((sum,c)=>sum+c.n,0),counts*2);for(const c of Object.values(tables))assert.equal(Object.values(c.hist).reduce((a,b)=>a+b,0),c.n);
+const a=e.snapshot(),b=new M.Engine(p).advance(p.duration).snapshot();assert.deepEqual(a,b);
+const empty=new M.Engine({...p,rate:[0,0],pulses:[]}).advance(500).snapshot();assert.deepEqual(empty.q,[0,0]);assert.deepEqual(empty.arrivals,[0,0]);const onlyShock={...p,rate:[0,0],pulses:[{start:100,end:101,add:100}]};const first=M.nextArrival(onlyShock,0,0,M.rng('pulse'));assert(first>=100&&first<101);assert.equal(M.nextArrival(onlyShock,0,102,M.rng('pulse')),Infinity);
+const r=M.rng('mean');let n=0;for(let k=0;k<1000;k++){let at=0;const z=M.rng('arrival-'+k);while(true){at=M.nextArrival(p,0,at,z);if(at>200)break;n++}}assert(Math.abs(n/1000-520)<3,'NHPP mean matches rate integral');
+const balanced={...p,duration:300,pulses:[],beta:0};const s=new M.Engine(balanced).advance(300).snapshot(),fraction=s.selected[0]/(s.selected[0]+s.selected[1]);assert(Math.abs(fraction-.5)<.05);
+console.log('PASS: pulse boundaries/integrals, NHPP arrival mean, stable Logit, A/B walks, switch feedback, boarding conservation, capacities, deterministic replay, sparse conditional tables, beta=0 split.');

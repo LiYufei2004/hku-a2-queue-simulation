@@ -40,10 +40,33 @@ CSV and JSON downloads include the actual parameter set, seed, time-bin definiti
 
 Double-click `start.command`, or run `python3 scripts/serve.py`. `register.command` registers `~/.local/bin/comp1110-sim` without editing shell profiles. HTTP is needed for the Web Worker.
 
-`publish.command` uses the official GitHub CLI, exports only the static assets and this README to a separate checkout, pushes main and enables GitHub Pages. Visitors do not need to log in. Subsequent runs update the same repository. Public files: index.html, app.js, model-core.js, batch-worker.js, batch-ui.js, the corridor PNG, README and .nojekyll.
+`publish.command` uses the official GitHub CLI, exports only the static assets and this README to a separate checkout, pushes main and enables GitHub Pages. Visitors do not need to log in. Subsequent runs update the same repository. The repository includes the webpage assets, model tests, local launch/registration scripts and publishing script. The export excludes local previews, generated statistics and neighbouring course documents.
 
 ## Validation
 
 `node tests/model.test.js` checks NHPP integrals and mean counts, shock boundaries, stable Logit signs, beta=0 splitting, geometry, actual choice feedback, conservation including walkers, capacities, deterministic seeds and histogram normalization.
 
 `node tests/worker-benchmark.js 1000000` runs the actual statistics worker algorithm and checks all 1,000,000 paired observations and both conditional tables. The benchmark summary is local only; it is not a precomputed lookup table shipped to users.
+
+## Key source files
+
+| File | Role |
+| --- | --- |
+| `model-core.js` | NHPP events, Logit decisions, walks, lift services, queue conservation and conditional sample collection |
+| `app.js` | Parameter controls, 20 Hz replay, map and full-information cost display |
+| `batch-worker.js` | Independent full-trajectory simulation and one-million snapshot aggregation |
+| `batch-ui.js` | Conditional distributions, lookup recommendations, charts, CSV/JSON export |
+| `tests/model.test.js` | Model invariants, distributions, zero-input edge cases and seed reproducibility |
+| `tests/worker-benchmark.js` | Full statistics-worker validation and benchmark |
+| `scripts/serve.py`, `start.command` | Local HTTP launch |
+| `register.command`, `publish.command` | Local command registration and GitHub Pages publication |
+
+Clone and run:
+
+```sh
+git clone https://github.com/LiYufei2004/hku-a2-queue-simulation.git
+cd hku-a2-queue-simulation
+python3 scripts/serve.py
+```
+
+Model checks require Node.js; the webpage itself needs only a browser.
