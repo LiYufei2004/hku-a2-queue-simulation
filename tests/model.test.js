@@ -1,5 +1,5 @@
 'use strict';
-const assert=require('node:assert/strict'),M=require('../model-core.js');
+const assert=require('node:assert/strict'),M=require('../backend/model-core.js');
 const p={seed:'test',duration:1200,rate:[2,80/60],pulses:[{start:60,end:180,add:1}],walkModel:'document',spacing:.45,beta:.05,speed:1.3,scale:.025,cap:[20,20],cycle:[40,200],std:[4,20],lifts:4,sample:5,window:300};
 assert.equal(M.rateAt(p,0,0),2);assert.equal(M.rateAt(p,0,60),3);assert.equal(M.rateAt(p,0,180),2);assert.equal(M.arrivalMean(p,0,0,200),520);assert.equal(M.arrivalMean(p,0,0,100)+M.arrivalMean(p,0,100,200),520);
 assert.equal(M.logit(10,20,0),.5);assert(M.logit(10,20,1)>.99);assert(M.logit(20,10,1)<.01);assert.equal(M.logit(0,1e9,1),1);assert.equal(M.logit(1e9,0,1),0);

@@ -28,18 +28,22 @@ else
   gh repo create "$FULL" --public --description 'HKU A2 queue choice simulator and Monte Carlo experiments'
   gh repo clone "$FULL" "$BUILD_DIR"
 fi
-mkdir -p "$BUILD_DIR/assets" "$BUILD_DIR/scripts" "$BUILD_DIR/tests"
-cp index.html app.js model-core.js batch-worker.js batch-ui.js "$BUILD_DIR/"
-cp assets/corridor_layout.png "$BUILD_DIR/assets/"
-cp README.md .gitignore start.command register.command publish.command "$BUILD_DIR/"
+mkdir -p "$BUILD_DIR/backend" "$BUILD_DIR/frontend/assets" "$BUILD_DIR/scripts" "$BUILD_DIR/tests"
+# Copy the explicit public source set; never export neighbouring course files.
+cp index.html README.md .gitignore start.command register.command publish.command "$BUILD_DIR/"
+cp backend/model-core.js backend/simulation-service.js backend/worker.js backend/API.md "$BUILD_DIR/backend/"
+cp frontend/index.html frontend/app.js frontend/batch-ui.js frontend/api-client.js frontend/map-geometry.js "$BUILD_DIR/frontend/"
+cp frontend/assets/corridor_layout.png "$BUILD_DIR/frontend/assets/"
 cp scripts/serve.py "$BUILD_DIR/scripts/"
-cp tests/model.test.js tests/worker-benchmark.js "$BUILD_DIR/tests/"
+cp tests/model.test.js tests/api.test.js tests/worker-benchmark.js tests/worker-harness.js "$BUILD_DIR/tests/"
 touch "$BUILD_DIR/.nojekyll"
 cd "$BUILD_DIR"
 git checkout -B main
-git add index.html app.js model-core.js batch-worker.js batch-ui.js assets/corridor_layout.png .nojekyll README.md .gitignore start.command register.command publish.command scripts/serve.py tests/model.test.js tests/worker-benchmark.js
+# Remove obsolete tracked entry points after migrating the previous flat layout.
+git rm --ignore-unmatch app.js model-core.js batch-worker.js batch-ui.js assets/corridor_layout.png
+git add index.html backend frontend .nojekyll README.md .gitignore start.command register.command publish.command scripts/serve.py tests
 if ! git diff --cached --quiet; then
-  git -c user.name="$OWNER" -c user.email="$OWNER@users.noreply.github.com" commit -m 'Update queue model, reproducible tests and run scripts'
+  git -c user.name="$OWNER" -c user.email="$OWNER@users.noreply.github.com" commit -m 'Separate simulation backend and visualization frontend with a versioned API'
 fi
 gh auth setup-git
 git push -u origin main

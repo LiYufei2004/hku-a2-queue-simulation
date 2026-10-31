@@ -48,17 +48,53 @@ Double-click `start.command`, or run `python3 scripts/serve.py`. `register.comma
 
 `node tests/model.test.js` checks NHPP integrals and mean counts, shock boundaries, stable Logit signs, beta=0 splitting, geometry, revised position-loss costs at surge boundaries, conditional cost aggregation, actual choice feedback, conservation including walkers, capacities, deterministic seeds and histogram normalization.
 
+`node tests/api.test.js` checks the public interface and backend/frontend dependency boundary.
+
 `node tests/worker-benchmark.js 1000000` runs the actual statistics worker algorithm and checks all 1,000,000 paired observations and both conditional tables. The benchmark summary is local only; it is not a precomputed lookup table shipped to users.
+
+## Frontend / backend separation
+
+```text
+backend/
+  model-core.js           # Simulation mathematics and event engine
+  simulation-service.js   # Validated public operations (also usable from Node)
+  worker.js               # API v1 message transport
+  API.md                  # Request/response contract, units and examples
+frontend/
+  index.html              # English interface
+  app.js                  # Playback and visualization
+  batch-ui.js             # Conditional-table presentation and exports
+  api-client.js           # Sole frontend transport integration point
+  map-geometry.js         # Presentation-only drawing interpolation
+  assets/                 # Corridor artwork
+index.html                # Compatibility redirect to frontend/
+tests/                    # Model invariants, API contract and worker benchmark
+```
+
+The frontend calls `generate`, `inspect`, and `collect` through
+`SimulationAPI.Client`. It does not load the simulation engine or calculate
+choice costs. The backend has no DOM/canvas dependency. Each client uses a Web
+Worker; collection uses a separate client so it does not block replay inspection.
+This is a logical computation backend hosted as static JavaScript, and does not
+require a separate HTTP server. The original public root URL remains valid.
+
+See [the API contract](backend/API.md) for exact schemas, units, cancellation,
+versioning and backend-only Node.js examples. API version 1 and mathematical
+model version 4 are tracked separately. The refactor preserves seeded results.
 
 ## Key source files
 
 | File | Role |
 | --- | --- |
-| `model-core.js` | NHPP events, Logit decisions, walks, lift services, queue conservation and conditional sample collection |
-| `app.js` | Parameter controls, 20 Hz replay, map and full-information cost display |
-| `batch-worker.js` | Independent full-trajectory simulation and one-million snapshot aggregation |
-| `batch-ui.js` | Conditional distributions, lookup recommendations, charts, CSV/JSON export |
-| `tests/model.test.js` | Model invariants, distributions, zero-input edge cases and seed reproducibility |
+| `backend/model-core.js` | NHPP, Logit, walks, lift services and conditional sample collection |
+| `backend/simulation-service.js` | Parameter validation and public simulation operations |
+| `backend/worker.js` | Versioned request/result/progress/error messages |
+| `backend/API.md` | Integration contract and examples |
+| `frontend/api-client.js` | Promise-based client and cancellation |
+| `frontend/app.js` | Parameter controls, asynchronous replay and map display |
+| `frontend/batch-ui.js` | Lookup, charts, CSV/JSON export |
+| `tests/model.test.js` | Mathematical invariants and seed reproducibility |
+| `tests/api.test.js` | Transport parity, invalid requests and dependency boundary |
 | `tests/worker-benchmark.js` | Full statistics-worker validation and benchmark |
 | `scripts/serve.py`, `start.command` | Local HTTP launch |
 | `register.command`, `publish.command` | Local command registration and GitHub Pages publication |

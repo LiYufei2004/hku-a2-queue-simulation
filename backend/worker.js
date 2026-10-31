@@ -1,0 +1,18 @@
+/* Transport adapter for the versioned simulation API. One worker per client. */
+importScripts('model-core.js?v=5','simulation-service.js?v=5');
+'use strict';
+const Service=SimulationService;
+function send(id,type,payload){postMessage({apiVersion:Service.API_VERSION,id,type,...payload})}
+onmessage=({data:request})=>{
+ const {id,apiVersion,method,params={}}=request||{};
+ try{
+  if(apiVersion!==Service.API_VERSION)throw Error('Unsupported simulation API version.');
+  if(method==='generate')send(id,'result',{result:Service.generate(params.p)});
+  else if(method==='inspect')send(id,'result',{result:Service.inspect(params.p,params.snapshot,params.side)});
+  else if(method==='collect'){
+   const collection=Service.createCollection(params.p,params.total);
+   function chunk(){try{const progress=collection.step();send(id,'progress',{progress});if(progress.done<progress.total)setTimeout(chunk,0);else send(id,'result',{result:collection.result()})}catch(e){send(id,'error',{error:{code:'SIMULATION_ERROR',message:e.message}})}}
+   chunk();
+  }else throw Error(`Unknown simulation method: ${method}`);
+ }catch(e){send(id,'error',{error:{code:'INVALID_REQUEST',message:e.message}})}
+};
