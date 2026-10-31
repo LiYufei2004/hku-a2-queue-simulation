@@ -4,6 +4,8 @@ Public app: https://liyufei2004.github.io/hku-a2-queue-simulation/
 
 ## Model implemented
 
+Version 4 uses the revised PDF walking/position-loss equations throughout the engine and conditional lookup. The interface, chart labels, status messages and exports are in English. Default entry settings: Side A 120 people/min, Side B 80 people/min, surge +60 people/min at each entry, starting at minute 0 for 10 minutes. The repeat interval remains 60 minutes because no replacement was supplied; 0 selects one surge. The defaults are illustrative inputs, not time-of-day recommendations.
+
 The app follows the supplied Chinese PDF's three layers: NHPP entry arrivals, full-information random-utility queue choice, and empirical conditional queue-length tables for partially informed users. The old exponential half-life model and fixed-opposite-queue experiment have been removed.
 
 ### Arrival layer
@@ -18,7 +20,7 @@ Each entrant observes both true queue lengths and chooses left with `1/(1+exp(be
 
 The decision point is the local queue tail, as in the PDF: Side A's local queue is left/direct; Side B's local queue is right/bypass. Staying has zero additional walk. Default switching distance follows the PDF: `spacing*(N_left+N_right)`, with spacing 0.45 m/person and speed 1.3 m/s. A selectable geometry comparison mode retains the earlier polyline distance at 0.025 m/pixel. These are assumptions, not measurements. Only geometry mode caps distance beyond the image; the PDF formula uses full counts. The route drawing is illustrative in PDF mode. No crowd-density slowdown is applied.
 
-Perceived delay uses the PDF batch approximation: `walk + ceil((queue + expected_position_loss + 1)/mean_capacity) * cycle/4`. The division by four is an explicit extension for the agreed four independent lifts on each side, not a claim that the PDF includes four lifts. Expected position loss integrates the entry NHPPs weighted by their most recent Logit split probabilities, held fixed over the walk. It is a local approximation, not an exact equilibrium forecast. Like the PDF, the perceived cost is conservative about services during that walk; the actual engine processes real services during it. Entrants currently walking are counted separately and join the destination queue only on arrival. Existing people in transit are not included in perceived queue length; no future random samples are revealed to deciding agents.
+Perceived delay uses the PDF batch approximation: `walk + ceil((queue + expected_position_loss + 1)/mean_capacity) * cycle/4`. The division by four is an explicit extension for the agreed four independent lifts on each side, not a claim that the PDF includes four lifts. Expected position loss follows revised PDF equation (6): the destination queue intensity at decision time multiplied by the walking duration. Destination intensity combines both entry NHPP rates weighted by their most recent Logit split probabilities. Future surge boundaries are not integrated in this perceived-cost estimate; actual arrivals still use the exact NHPP integral. It is a local approximation, not an exact equilibrium forecast. Like the PDF, the perceived cost is conservative about services during that walk; the actual engine processes real services during it. Entrants currently walking are counted separately and join the destination queue only on arrival. Existing people in transit are not included in perceived queue length; no future random samples are revealed to deciding agents.
 
 ### Actual service
 
@@ -44,7 +46,7 @@ Double-click `start.command`, or run `python3 scripts/serve.py`. `register.comma
 
 ## Validation
 
-`node tests/model.test.js` checks NHPP integrals and mean counts, shock boundaries, stable Logit signs, beta=0 splitting, geometry, actual choice feedback, conservation including walkers, capacities, deterministic seeds and histogram normalization.
+`node tests/model.test.js` checks NHPP integrals and mean counts, shock boundaries, stable Logit signs, beta=0 splitting, geometry, revised position-loss costs at surge boundaries, conditional cost aggregation, actual choice feedback, conservation including walkers, capacities, deterministic seeds and histogram normalization.
 
 `node tests/worker-benchmark.js 1000000` runs the actual statistics worker algorithm and checks all 1,000,000 paired observations and both conditional tables. The benchmark summary is local only; it is not a precomputed lookup table shipped to users.
 

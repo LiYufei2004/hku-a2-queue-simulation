@@ -11,3 +11,27 @@ const empty=new M.Engine({...p,rate:[0,0],pulses:[]}).advance(500).snapshot();as
 const r=M.rng('mean');let n=0;for(let k=0;k<1000;k++){let at=0;const z=M.rng('arrival-'+k);while(true){at=M.nextArrival(p,0,at,z);if(at>200)break;n++}}assert(Math.abs(n/1000-520)<3,'NHPP mean matches rate integral');
 const balanced={...p,duration:300,pulses:[],beta:0};const s=new M.Engine(balanced).advance(300).snapshot(),fraction=s.selected[0]/(s.selected[0]+s.selected[1]);assert(Math.abs(fraction-.5)<.05);
 console.log('PASS: pulse boundaries/integrals, NHPP arrival mean, stable Logit, A/B walks, switch feedback, boarding conservation, capacities, deterministic replay, sparse conditional tables, beta=0 split.');
+// Revised PDF Eqs. (6)-(7): use current queue intensity even across surge edges.
+const revised={...p,spacing:1,speed:1,cap:[20,20],cycle:[40,200],lifts:4};
+const splits=[.25,.75],q=[10,20],walk=30;
+const rates=M.queueRates(revised,59,splits);
+assert(Math.abs(rates[0]+rates[1]-(M.rateAt(revised,0,59)+M.rateAt(revised,1,59)))<1e-12,'routed flow is conserved');
+const detail=M.costBreakdown(revised,59,q,'A',splits);
+assert.equal(detail[0].walk,0);assert.equal(detail[0].positionLoss,0);
+assert.equal(detail[0].total,Math.ceil(11/18)*10);
+assert.equal(detail[1].walk,walk);
+assert.equal(detail[1].positionLoss,rates[1]*walk);
+assert.equal(detail[1].total,walk+Math.ceil((20+rates[1]*walk+1)/18)*50);
+const oldLoss=M.arrivalMean(revised,0,59,89)*(1-splits[0])+M.arrivalMean(revised,1,59,89)*(1-splits[1]);
+assert.notEqual(detail[1].positionLoss,oldLoss,'do not integrate a future surge into the PDF perception formula');
+assert(M.costBreakdown(revised,60,q,'A',splits)[1].positionLoss>detail[1].positionLoss);
+assert(M.costBreakdown(revised,180,q,'A',splits)[1].positionLoss<M.costBreakdown(revised,179,q,'A',splits)[1].positionLoss);
+const symmetric=M.costBreakdown(revised,59,q,'B',splits);
+assert.equal(symmetric[1].positionLoss,0);assert.equal(symmetric[0].positionLoss,rates[0]*walk);
+const conditional={};
+const observations=[{t:59,q:[10,20],prob:splits},{t:60,q:[10,25],prob:[.6,.4]}];
+for(const observation of observations)M.collectSample(conditional,observation,revised);
+const cell=conditional['A|0|10'];assert.equal(cell.n,2);
+assert.equal(cell.sumLeft,observations.reduce((sum,s)=>sum+M.costs(revised,s.t,s.q,'A',s.prob)[0],0));
+assert.equal(cell.sumRight,observations.reduce((sum,s)=>sum+M.costs(revised,s.t,s.q,'A',s.prob)[1],0));
+console.log('PASS: revised PDF current-rate position loss, surge edges, symmetric switching, routed-rate conservation and conditional cost aggregation.');
