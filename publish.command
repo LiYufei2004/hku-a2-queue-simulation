@@ -31,11 +31,11 @@ fi
 mkdir -p "$BUILD_DIR/backend" "$BUILD_DIR/frontend/assets" "$BUILD_DIR/scripts" "$BUILD_DIR/tests"
 # Copy the explicit public source set; never export neighbouring course files.
 cp index.html README.md .gitignore start.command register.command publish.command "$BUILD_DIR/"
-cp backend/model-core.js backend/simulation-service.js backend/worker.js backend/API.md "$BUILD_DIR/backend/"
-cp frontend/index.html frontend/app.js frontend/batch-ui.js frontend/api-client.js frontend/map-geometry.js "$BUILD_DIR/frontend/"
-cp frontend/assets/corridor_layout.png "$BUILD_DIR/frontend/assets/"
+cp backend/model-core.js backend/time-profile.js backend/advisor.js backend/simulation-service.js backend/worker.js backend/API.md "$BUILD_DIR/backend/"
+cp frontend/index.html frontend/user.html frontend/user.js frontend/app.js frontend/batch-ui.js frontend/api-client.js frontend/map-geometry.js "$BUILD_DIR/frontend/"
+cp frontend/assets/corridor_layout.png frontend/assets/a2-schematic.svg "$BUILD_DIR/frontend/assets/"
 cp scripts/serve.py "$BUILD_DIR/scripts/"
-cp tests/model.test.js tests/api.test.js tests/worker-benchmark.js tests/worker-harness.js "$BUILD_DIR/tests/"
+cp tests/model.test.js tests/api.test.js tests/advisor.test.js tests/worker-benchmark.js tests/worker-harness.js "$BUILD_DIR/tests/"
 touch "$BUILD_DIR/.nojekyll"
 cd "$BUILD_DIR"
 git checkout -B main

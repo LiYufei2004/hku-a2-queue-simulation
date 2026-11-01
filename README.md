@@ -2,6 +2,22 @@
 
 Public app: https://liyufei2004.github.io/hku-a2-queue-simulation/
 
+Passenger advisor: https://liyufei2004.github.io/hku-a2-queue-simulation/frontend/user.html
+
+## Passenger advisor (user page)
+
+`frontend/user.html` is a mobile-first page for people standing in the queue. It reads the current Hong Kong time. The user picks a walking speed and the queue they are in. They then tap their position on a redrawn schematic (`frontend/assets/a2-schematic.svg`), or choose a landmark such as "University Street, middle section" or "In front of Chow Yei Ching Building". The page answers stay or switch, with estimated waits for both options. Side A is the west entrance (University Street / Library / Kadoorie); Side B is the east entrance (Chow Yei Ching).
+
+The page uses the same backend and engine as the academic page, through the same API client. `backend/time-profile.js` holds the time-of-day profile:
+- weekday teaching hours;
+- lunch (12:00–14:00) and dinner (17:30–19:30) uplifts;
+- a 10-minute peak after classes end at :50;
+- lower evening, weekend and night rates.
+
+These rates are illustrative and should be calibrated with field counts. The academic defaults (120 + 80 people/min) exceed total lift capacity (about 130 people/min), so the profile uses lower baselines. Otherwise queues would grow all day.
+
+The user never enters the other queue. `backend/advisor.js` estimates its length from simulated snapshots that match the user's own queue at that time, `P(other | own, time)`. It then simulates staying versus walking over, using real lift events. Both pages link to each other.
+
 ## Model implemented
 
 Version 4 uses the revised PDF walking/position-loss equations throughout the engine and conditional lookup. The interface, chart labels, status messages and exports are in English. Default entry settings: Side A 120 people/min, Side B 80 people/min, surge +60 people/min at each entry, starting at minute 0 for 10 minutes. The repeat interval remains 60 minutes because no replacement was supplied; 0 selects one surge. The defaults are illustrative inputs, not time-of-day recommendations.

@@ -2,7 +2,7 @@
 (function(root){
 'use strict';
 const API_VERSION=1;
-const workerURL=new URL('../backend/worker.js?v=5',document.currentScript.src);
+const workerURL=new URL('../backend/worker.js?v=6',document.currentScript.src);
 
 class SimulationClient{
  constructor(){
@@ -54,6 +54,13 @@ class SimulationClient{
 
  // Table: {done, total, runs, cells, p, apiVersion, modelVersion}.
  collect(p,total,onProgress){return this.request('collect',{p,total},onProgress)}
+
+ // Passenger advisor. Layout: {paths, lengths, personSpacingPixels}.
+ layout(){return this.request('layout',{})}
+ // Period for a time: now is epoch ms or {weekday 0=Sun..6, seconds since HK midnight}.
+ profile(now){return this.request('profile',{now})}
+ // Stay/switch estimate: input {now, queue 0|1, ahead, speed}.
+ advise(input){return this.request('advise',{input})}
 
  close(message='Simulation request cancelled.'){
   if(this.closed)return;

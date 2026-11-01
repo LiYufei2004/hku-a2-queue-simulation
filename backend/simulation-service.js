@@ -1,7 +1,9 @@
 /* Public simulation service. Pure data in/out; no DOM, canvas or browser APIs. */
 (function(root){
 'use strict';
-const M=typeof module!=='undefined'&&module.exports?require('./model-core.js'):root.QueueModel;
+const isNode=typeof module!=='undefined'&&module.exports;
+const M=isNode?require('./model-core.js'):root.QueueModel;
+const TP=isNode?require('./time-profile.js'):root.TimeProfile,ADV=isNode?require('./advisor.js'):root.Advisor;
 const API_VERSION=1,MODEL_VERSION=4;
 function validateParams(p){
  if(!p||typeof p!=='object')throw Error('Simulation parameters are required.');
@@ -27,5 +29,9 @@ function createCollection(p,total=1000000){
  const s={p,total,done:0,runs:0,tables:{},engine:null,tick:1};
  return {step(limit=3000){let work=0;while(s.done<s.total&&work<limit){if(!s.engine){s.engine=new M.Engine(s.p,s.p.seed+'-table-'+s.runs);s.runs++;s.tick=1}const t=Math.min(s.p.duration,s.tick*s.p.sample);s.engine.advance(t);M.collectSample(s.tables,s.engine.snapshot(),s.p);s.done++;s.tick++;work++;if(t>=s.p.duration)s.engine=null}return {done:s.done,total:s.total,runs:s.runs}},result(){if(s.done!==s.total)throw Error('Collection is incomplete.');return {done:s.done,total:s.total,runs:s.runs,cells:Object.values(s.tables),p:s.p,apiVersion:API_VERSION,modelVersion:MODEL_VERSION}}};
 }
-const api={API_VERSION,MODEL_VERSION,validateParams,generate,inspect,createCollection};root.SimulationService=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
+// Passenger advisor (additive): layout for drawing, time-of-day period, and stay/switch estimates.
+function layout(){return {apiVersion:API_VERSION,modelVersion:MODEL_VERSION,paths:M.paths,lengths:M.lengths,personSpacingPixels:18}}
+function profile(now){const clock=TP.normalizeNow(now),current=TP.rateAtClock(clock.weekday,clock.seconds);return {apiVersion:API_VERSION,clock,period:current.labels,entryRates:current.rate}}
+function advise(input){return {apiVersion:API_VERSION,modelVersion:MODEL_VERSION,...ADV.advise(input)}}
+const api={API_VERSION,MODEL_VERSION,validateParams,generate,inspect,createCollection,layout,profile,advise};root.SimulationService=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof self!=='undefined'?self:globalThis);
