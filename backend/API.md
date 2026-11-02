@@ -9,12 +9,16 @@ The mathematical model is version 4; API version 1 is an independent protocol ve
 
 - `backend/model-core.js`: NHPP arrivals, walking costs, Logit choice, lift events,
   queue conservation, replay and conditional sample aggregation.
+- `backend/time-profile.js`: Hong Kong time-of-day arrival profile for the passenger advisor
+  (editable, illustrative rates; class-end peaks at :50, lunch and dinner uplifts).
+- `backend/advisor.js`: stay/switch estimates built on the same engine (see `advise`).
 - `backend/simulation-service.js`: public operations, parameter validation and
   plain-data results; also usable directly from Node.js without the frontend.
 - `backend/worker.js`: versioned message transport and cooperative collection chunks.
 - `frontend/api-client.js`: the only frontend file that creates workers or knows
   their URL. Replacing this transport is the integration point for a future server.
 - `frontend/app.js`, `frontend/batch-ui.js`: forms, playback and visualization.
+- `frontend/user.html`, `frontend/user.js`: passenger advisor page (same API client).
 - `frontend/map-geometry.js`: drawing interpolation using a layout returned by
   the service. It does not calculate choice probabilities or simulation costs.
 
@@ -87,6 +91,31 @@ Divide sums by `n` to display conditional means; divide histogram counts by `n`
 to display probabilities. No definite recommendation is shown below 30 matches.
 No hidden live queue value is used for missing conditions.
 
+### Passenger advisor methods (additive, API version 1)
+
+```js
+const layout = await client.layout();            // {paths, lengths, personSpacingPixels}
+const period = await client.profile(Date.now()); // {clock, period, entryRates}
+const advice = await client.advise({now: Date.now(), queue: 1, ahead: 30, speed: 1.3});
+```
+
+`now` is epoch milliseconds (converted to Hong Kong time) or `{weekday: 0=Sun..6, seconds}`
+since Hong Kong midnight. `queue` is 0 (left/direct, Side A) or 1 (right/via A1, Side B);
+`ahead` is the number of people in front of the user (0-400); `speed` is m/s (0.3-3).
+
+The advisor simulates 100 seeded trajectories from 15 minutes before `now` with profile
+arrivals (rate `[0,0]` plus per-entry `addBy` pulses), records paired queue lengths every
+5 s within +-3 min of `now`, and keeps snapshots whose own queue holds the user's position
+(`ahead` to `ahead + max(2, 15%)`). Those give `P(other queue | own queue, time)`. From up to
+80 matching states the engine is cloned and both choices are simulated with real lift events:
+stay at position `ahead`, or walk `0.45 m x (people passed + other queue)` at the user's speed
+and join the other tail. Result fields: `recommendation` (`stay`/`switch`/`close`),
+`pSwitchFaster`, `timeSaved`, `stay`/`switch` wait summaries `{n, mean, p10, median, p90}`
+in seconds until boarding (switch also has `walk`), `otherQueue {hist, n, median, p05, p95}`,
+`matches`, `branches`, `lowConfidence` (fewer than 30 exact matches; nearest snapshots
+are used instead), `period` and `entryRates` (people/minute). Deterministic for the same
+minute and inputs.
+
 ## Parameter object
 
 All backend units are **seconds, metres and people/second**. UI values in minutes
@@ -136,7 +165,7 @@ while (collection.step().done < 1000) {}
 const table = collection.result();
 ```
 
-Run `node tests/model.test.js`, `node tests/api.test.js`, and
+Run `node tests/model.test.js`, `node tests/api.test.js`, `node tests/advisor.test.js`, and
 `node tests/worker-benchmark.js 1000000` from the project root. The API tests
 verify that the worker produces the exact same seeded replay, decisions and
 conditional table as the direct backend, and rejects invalid requests.
