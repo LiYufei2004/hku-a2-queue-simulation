@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 1000" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif">
+<!-- HKU University Street around the A2 lifts. Simplified 2.5D drawing, not to scale; own artwork. Queue overlay coordinates live in frontend/campus-map.js. -->
+<defs>
+<linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5f9a4e"/><stop offset="1" stop-color="#a9cf8c"/></linearGradient>
+<linearGradient id="lawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe6b8"/><stop offset="1" stop-color="#e3f0d4"/></linearGradient>
+<pattern id="win" width="34" height="30" patternUnits="userSpaceOnUse"><rect x="5" y="6" width="22" height="16" rx="2" fill="#8a4a2a" fill-opacity=".45"/></pattern>
+<pattern id="winBlue" width="34" height="26" patternUnits="userSpaceOnUse"><rect x="4" y="5" width="26" height="14" rx="2" fill="#3f6f9a" fill-opacity=".45"/></pattern>
+<pattern id="winGrey" width="40" height="34" patternUnits="userSpaceOnUse"><rect x="6" y="8" width="28" height="18" rx="2" fill="#6c7a88" fill-opacity=".35"/></pattern>
+<pattern id="rail" width="24" height="10" patternUnits="userSpaceOnUse"><rect width="4" height="10" fill="#7b8a96"/></pattern>
+<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#4c6475"/></marker>
+</defs>
+<rect width="2400" height="1000" fill="url(#lawn)"/>
+<path d="M0 0H2400V250Q1800 300 1200 270Q600 240 0 290Z" fill="url(#hill)"/>
+<circle cx="40" cy="146" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="40" cy="140" r="30" fill="#5c9c48"/><circle cx="31.0" cy="131.0" r="13.5" fill="#7bb85f"/>
+<circle cx="125" cy="71" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="125" cy="65" r="30" fill="#5c9c48"/><circle cx="116.0" cy="56.0" r="13.5" fill="#7bb85f"/>
+<circle cx="210" cy="136" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="210" cy="130" r="30" fill="#5c9c48"/><circle cx="201.0" cy="121.0" r="13.5" fill="#7bb85f"/>
+<circle cx="295" cy="201" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="295" cy="195" r="30" fill="#5c9c48"/><circle cx="286.0" cy="186.0" r="13.5" fill="#7bb85f"/>
+<circle cx="380" cy="126" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="380" cy="120" r="30" fill="#5c9c48"/><circle cx="371.0" cy="111.0" r="13.5" fill="#7bb85f"/>
+<circle cx="465" cy="191" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="465" cy="185" r="30" fill="#5c9c48"/><circle cx="456.0" cy="176.0" r="13.5" fill="#7bb85f"/>
+<circle cx="550" cy="116" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="550" cy="110" r="30" fill="#5c9c48"/><circle cx="541.0" cy="101.0" r="13.5" fill="#7bb85f"/>
+<circle cx="635" cy="181" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="635" cy="175" r="30" fill="#5c9c48"/><circle cx="626.0" cy="166.0" r="13.5" fill="#7bb85f"/>
+<circle cx="720" cy="106" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="720" cy="100" r="30" fill="#5c9c48"/><circle cx="711.0" cy="91.0" r="13.5" fill="#7bb85f"/>
+<circle cx="805" cy="171" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="805" cy="165" r="30" fill="#5c9c48"/><circle cx="796.0" cy="156.0" r="13.5" fill="#7bb85f"/>
+<circle cx="890" cy="96" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="890" cy="90" r="30" fill="#5c9c48"/><circle cx="881.0" cy="81.0" r="13.5" fill="#7bb85f"/>
+<circle cx="975" cy="161" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="975" cy="155" r="30" fill="#5c9c48"/><circle cx="966.0" cy="146.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1060" cy="86" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1060" cy="80" r="30" fill="#5c9c48"/><circle cx="1051.0" cy="71.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1145" cy="151" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1145" cy="145" r="30" fill="#5c9c48"/><circle cx="1136.0" cy="136.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1230" cy="76" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1230" cy="70" r="30" fill="#5c9c48"/><circle cx="1221.0" cy="61.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1315" cy="141" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1315" cy="135" r="30" fill="#5c9c48"/><circle cx="1306.0" cy="126.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1400" cy="66" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1400" cy="60" r="30" fill="#5c9c48"/><circle cx="1391.0" cy="51.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1485" cy="131" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1485" cy="125" r="30" fill="#5c9c48"/><circle cx="1476.0" cy="116.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1570" cy="196" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1570" cy="190" r="30" fill="#5c9c48"/><circle cx="1561.0" cy="181.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1655" cy="121" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1655" cy="115" r="30" fill="#5c9c48"/><circle cx="1646.0" cy="106.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1740" cy="186" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1740" cy="180" r="30" fill="#5c9c48"/><circle cx="1731.0" cy="171.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1825" cy="111" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1825" cy="105" r="30" fill="#5c9c48"/><circle cx="1816.0" cy="96.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1910" cy="176" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1910" cy="170" r="30" fill="#5c9c48"/><circle cx="1901.0" cy="161.0" r="13.5" fill="#7bb85f"/>
+<circle cx="1995" cy="101" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="1995" cy="95" r="30" fill="#5c9c48"/><circle cx="1986.0" cy="86.0" r="13.5" fill="#7bb85f"/>
+<circle cx="2080" cy="166" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="2080" cy="160" r="30" fill="#5c9c48"/><circle cx="2071.0" cy="151.0" r="13.5" fill="#7bb85f"/>
+<circle cx="2165" cy="91" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="2165" cy="85" r="30" fill="#5c9c48"/><circle cx="2156.0" cy="76.0" r="13.5" fill="#7bb85f"/>
+<circle cx="2250" cy="156" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="2250" cy="150" r="30" fill="#5c9c48"/><circle cx="2241.0" cy="141.0" r="13.5" fill="#7bb85f"/>
+<circle cx="2335" cy="81" r="30" fill="#3d7a3a" opacity=".35"/><circle cx="2335" cy="75" r="30" fill="#5c9c48"/><circle cx="2326.0" cy="66.0" r="13.5" fill="#7bb85f"/>
+<circle cx="80" cy="216" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="80" cy="210" r="24" fill="#5c9c48"/><circle cx="72.8" cy="202.8" r="10.8" fill="#7bb85f"/>
+<circle cx="200" cy="206" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="200" cy="200" r="24" fill="#5c9c48"/><circle cx="192.8" cy="192.8" r="10.8" fill="#7bb85f"/>
+<circle cx="320" cy="196" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="320" cy="190" r="24" fill="#5c9c48"/><circle cx="312.8" cy="182.8" r="10.8" fill="#7bb85f"/>
+<circle cx="440" cy="186" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="440" cy="180" r="24" fill="#5c9c48"/><circle cx="432.8" cy="172.8" r="10.8" fill="#7bb85f"/>
+<circle cx="560" cy="176" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="560" cy="170" r="24" fill="#5c9c48"/><circle cx="552.8" cy="162.8" r="10.8" fill="#7bb85f"/>
+<circle cx="680" cy="236" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="680" cy="230" r="24" fill="#5c9c48"/><circle cx="672.8" cy="222.8" r="10.8" fill="#7bb85f"/>
+<circle cx="800" cy="226" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="800" cy="220" r="24" fill="#5c9c48"/><circle cx="792.8" cy="212.8" r="10.8" fill="#7bb85f"/>
+<circle cx="920" cy="216" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="920" cy="210" r="24" fill="#5c9c48"/><circle cx="912.8" cy="202.8" r="10.8" fill="#7bb85f"/>
+<circle cx="1040" cy="206" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="1040" cy="200" r="24" fill="#5c9c48"/><circle cx="1032.8" cy="192.8" r="10.8" fill="#7bb85f"/>
+<circle cx="1160" cy="196" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="1160" cy="190" r="24" fill="#5c9c48"/><circle cx="1152.8" cy="182.8" r="10.8" fill="#7bb85f"/>
+<circle cx="1280" cy="186" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="1280" cy="180" r="24" fill="#5c9c48"/><circle cx="1272.8" cy="172.8" r="10.8" fill="#7bb85f"/>
+<circle cx="1400" cy="176" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="1400" cy="170" r="24" fill="#5c9c48"/><circle cx="1392.8" cy="162.8" r="10.8" fill="#7bb85f"/>
+<circle cx="1520" cy="236" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="1520" cy="230" r="24" fill="#5c9c48"/><circle cx="1512.8" cy="222.8" r="10.8" fill="#7bb85f"/>
+<circle cx="1640" cy="226" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="1640" cy="220" r="24" fill="#5c9c48"/><circle cx="1632.8" cy="212.8" r="10.8" fill="#7bb85f"/>
+<circle cx="1760" cy="216" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="1760" cy="210" r="24" fill="#5c9c48"/><circle cx="1752.8" cy="202.8" r="10.8" fill="#7bb85f"/>
+<circle cx="1880" cy="206" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="1880" cy="200" r="24" fill="#5c9c48"/><circle cx="1872.8" cy="192.8" r="10.8" fill="#7bb85f"/>
+<circle cx="2000" cy="196" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="2000" cy="190" r="24" fill="#5c9c48"/><circle cx="1992.8" cy="182.8" r="10.8" fill="#7bb85f"/>
+<circle cx="2120" cy="186" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="2120" cy="180" r="24" fill="#5c9c48"/><circle cx="2112.8" cy="172.8" r="10.8" fill="#7bb85f"/>
+<circle cx="2240" cy="176" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="2240" cy="170" r="24" fill="#5c9c48"/><circle cx="2232.8" cy="162.8" r="10.8" fill="#7bb85f"/>
+<circle cx="2360" cy="236" r="24" fill="#3d7a3a" opacity=".35"/><circle cx="2360" cy="230" r="24" fill="#5c9c48"/><circle cx="2352.8" cy="222.8" r="10.8" fill="#7bb85f"/>
+<path d="M0 935Q600 860 1200 880T2400 900V1000H0Z" fill="#c9cfd5"/>
+<path d="M0 935Q600 860 1200 880T2400 900" fill="none" stroke="#f4f6f8" stroke-width="4" stroke-dasharray="40 30" transform="translate(0 30)"/>
+<text x="1650" y="968" font-size="30" font-weight="700" fill="#5d6d79" letter-spacing="6">POK FU LAM ROAD</text>
+<circle cx="1120" cy="806" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="1120" cy="800" r="26" fill="#5c9c48"/><circle cx="1112.2" cy="792.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="1180" cy="836" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="1180" cy="830" r="26" fill="#5c9c48"/><circle cx="1172.2" cy="822.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="1700" cy="826" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="1700" cy="820" r="26" fill="#5c9c48"/><circle cx="1692.2" cy="812.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="1780" cy="806" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="1780" cy="800" r="26" fill="#5c9c48"/><circle cx="1772.2" cy="792.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="1860" cy="836" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="1860" cy="830" r="26" fill="#5c9c48"/><circle cx="1852.2" cy="822.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="2000" cy="816" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="2000" cy="810" r="26" fill="#5c9c48"/><circle cx="1992.2" cy="802.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="2100" cy="836" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="2100" cy="830" r="26" fill="#5c9c48"/><circle cx="2092.2" cy="822.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="760" cy="826" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="760" cy="820" r="26" fill="#5c9c48"/><circle cx="752.2" cy="812.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="700" cy="856" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="700" cy="850" r="26" fill="#5c9c48"/><circle cx="692.2" cy="842.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="260" cy="836" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="260" cy="830" r="26" fill="#5c9c48"/><circle cx="252.2" cy="822.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="320" cy="866" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="320" cy="860" r="26" fill="#5c9c48"/><circle cx="312.2" cy="852.2" r="11.700000000000001" fill="#7bb85f"/>
+<path d="M720 300L744 276H1204L1180 300Z" fill="#f6cdb2"/>
+<path d="M1180 300L1204 276V416L1180 440Z" fill="#c97f57"/>
+<rect x="720" y="300" width="460" height="140" fill="#e7a27b"/>
+<rect x="730" y="312" width="440" height="116" fill="url(#win)"/>
+<rect x="768" y="344" width="364" height="52" rx="10" fill="#ffffff" fill-opacity=".92" stroke="#c9b8a8" stroke-width="1.5"/>
+<text x="950" y="381" font-size="30" font-weight="700" fill="#4a2a17" text-anchor="middle">Haking Wong Building</text>
+<path d="M1200 250L1224 226H1414L1390 250Z" fill="#f3c3a9"/>
+<path d="M1390 250L1414 226V416L1390 440Z" fill="#c27656"/>
+<rect x="1200" y="250" width="190" height="190" fill="#e0997a"/>
+<rect x="1210" y="262" width="170" height="166" fill="url(#win)"/>
+<rect x="1179" y="306" width="232" height="79" rx="10" fill="#ffffff" fill-opacity=".92" stroke="#c9b8a8" stroke-width="1.5"/>
+<text x="1295" y="338" font-size="26" font-weight="700" fill="#4a2a17" text-anchor="middle">Simon K.Y. Lee</text>
+<text x="1295" y="371" font-size="19" font-weight="500" fill="#4a2a17" text-anchor="middle">Hall</text>
+<path d="M1395 330L1419 306H1594L1570 330Z" fill="#f7d3ba"/>
+<path d="M1570 330L1594 306V416L1570 440Z" fill="#cc875f"/>
+<rect x="1395" y="330" width="175" height="110" fill="#e9ad86"/>
+<rect x="1405" y="342" width="155" height="86" fill="url(#win)"/>
+<rect x="1403" y="346" width="159" height="79" rx="10" fill="#ffffff" fill-opacity=".92" stroke="#c9b8a8" stroke-width="1.5"/>
+<text x="1482" y="378" font-size="26" font-weight="700" fill="#4a2a17" text-anchor="middle">Composite</text>
+<text x="1482" y="411" font-size="19" font-weight="500" fill="#4a2a17" text-anchor="middle">Building</text>
+<path d="M1590 290L1614 266H1864L1840 290Z" fill="#f8d6c0"/>
+<path d="M1840 290L1864 266V416L1840 440Z" fill="#cf8d66"/>
+<rect x="1590" y="290" width="250" height="150" fill="#eab08d"/>
+<rect x="1600" y="302" width="230" height="126" fill="url(#win)"/>
+<rect x="1591" y="323" width="248" height="84" rx="10" fill="#ffffff" fill-opacity=".92" stroke="#c9b8a8" stroke-width="1.5"/>
+<text x="1715" y="358" font-size="28" font-weight="700" fill="#4a2a17" text-anchor="middle">Chow Yei Ching</text>
+<text x="1715" y="393" font-size="20" font-weight="500" fill="#4a2a17" text-anchor="middle">Building</text>
+<path d="M1900 250L1924 226H2394L2370 250Z" fill="#eef5fb"/>
+<path d="M2370 250L2394 226V416L2370 440Z" fill="#aac3d8"/>
+<rect x="1900" y="250" width="470" height="190" fill="#d7e6f3"/>
+<rect x="1910" y="262" width="450" height="166" fill="url(#winBlue)"/>
+<rect x="1978" y="300" width="314" height="89" rx="10" fill="#ffffff" fill-opacity=".92" stroke="#c9b8a8" stroke-width="1.5"/>
+<text x="2135" y="338" font-size="30" font-weight="700" fill="#173a51" text-anchor="middle">Jockey Club Tower</text>
+<text x="2135" y="375" font-size="22" font-weight="500" fill="#173a51" text-anchor="middle">Centennial Campus</text>
+<path d="M40 580L64 556H344L320 580Z" fill="#eef1f4"/>
+<path d="M320 580L344 556V766L320 790Z" fill="#b4bcc5"/>
+<rect x="40" y="580" width="280" height="210" fill="#d9dee4"/>
+<rect x="50" y="592" width="260" height="186" fill="url(#winGrey)"/>
+<rect x="99" y="640" width="162" height="89" rx="10" fill="#ffffff" fill-opacity=".92" stroke="#c9b8a8" stroke-width="1.5"/>
+<text x="180" y="678" font-size="30" font-weight="700" fill="#173a51" text-anchor="middle">Library</text>
+<text x="180" y="715" font-size="22" font-weight="500" fill="#173a51" text-anchor="middle">Building</text>
+<path d="M440 560L464 536H634L610 560Z" fill="#f1f7fc"/>
+<path d="M610 560L634 536V836L610 860Z" fill="#a9bfd3"/>
+<rect x="440" y="560" width="170" height="300" fill="#dde9f5"/>
+<rect x="450" y="572" width="150" height="276" fill="url(#winBlue)"/>
+<rect x="383" y="663" width="283" height="74" rx="10" fill="#ffffff" fill-opacity=".92" stroke="#c9b8a8" stroke-width="1.5"/>
+<text x="525" y="694" font-size="24" font-weight="700" fill="#173a51" text-anchor="middle">Kadoorie</text>
+<text x="525" y="724" font-size="17" font-weight="500" fill="#173a51" text-anchor="middle">Biological Sciences</text>
+<circle cx="380" cy="606" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="380" cy="600" r="26" fill="#5c9c48"/><circle cx="372.2" cy="592.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="660" cy="616" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="660" cy="610" r="26" fill="#5c9c48"/><circle cx="652.2" cy="602.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="400" cy="706" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="400" cy="700" r="26" fill="#5c9c48"/><circle cx="392.2" cy="692.2" r="11.700000000000001" fill="#7bb85f"/>
+<circle cx="690" cy="726" r="26" fill="#3d7a3a" opacity=".35"/><circle cx="690" cy="720" r="26" fill="#5c9c48"/><circle cx="682.2" cy="712.2" r="11.700000000000001" fill="#7bb85f"/>
+<rect x="40" y="440" width="2330" height="64" fill="#f3ead9" stroke="#cdbb9f" stroke-width="3"/>
+<rect x="330" y="440" width="370" height="64" fill="#e9eef2" stroke="#8d9aa5" stroke-width="3"/>
+<rect x="330" y="432" width="370" height="10" fill="url(#rail)"/><rect x="330" y="503" width="370" height="10" fill="url(#rail)"/>
+<rect x="313" y="383" width="404" height="44" rx="10" fill="#ffffff" fill-opacity=".92" stroke="#c9b8a8" stroke-width="1.5"/>
+<text x="515" y="414" font-size="24" font-weight="700" fill="#173a51" text-anchor="middle">University Street footbridge</text>
+<text x="1450" y="530" font-size="22" font-weight="700" fill="#8a7454" letter-spacing="4" text-anchor="middle">UNIVERSITY STREET</text>
+<path d="M960 640V880" stroke="#c8102e" stroke-width="5" stroke-dasharray="14 10"/>
+<path d="M895 512L919 488H1079L1055 512Z" fill="#9fb2c2"/>
+<path d="M1055 512L1079 488V616L1055 640Z" fill="#7b91a4"/>
+<rect x="895" y="512" width="160" height="128" fill="#c3d2de" stroke="#5d7385" stroke-width="3"/>
+<rect x="908" y="522" width="60" height="44" rx="4" fill="#095ccc"/><rect x="982" y="522" width="60" height="44" rx="4" fill="#007d89"/>
+<text x="938" y="551" font-size="18" font-weight="800" fill="#fff" text-anchor="middle">L</text><text x="1012" y="551" font-size="18" font-weight="800" fill="#fff" text-anchor="middle">R</text>
+<text x="975" y="604" font-size="26" font-weight="800" fill="#173a51" text-anchor="middle">A2 lifts</text>
+<text x="975" y="628" font-size="16" fill="#3c5568" text-anchor="middle">(A1 / A2 MTR lifts)</text>
+<circle cx="960" cy="885" r="20" fill="#c8102e"/><path d="M948 885h24M960 873v24" stroke="#fff" stroke-width="4"/>
+<rect x="817" y="809" width="287" height="42" rx="10" fill="#ffffff" fill-opacity=".92" stroke="#c9b8a8" stroke-width="1.5"/>
+<text x="960" y="838" font-size="22" font-weight="700" fill="#c8102e" text-anchor="middle">MTR Exit A · A1 level</text>
+<path d="M1055 600L1150 640" stroke="#6b7d8c" stroke-width="2" stroke-dasharray="6 6"/>
+<g transform="translate(1150 560)"><rect width="430" height="250" rx="14" fill="#fff" stroke="#9fb2c2" stroke-width="2"/>
+<text x="20" y="36" font-size="22" font-weight="700" fill="#173a51">A2 lift lobby (zoom)</text>
+<rect x="20" y="58" width="190" height="44" rx="8" fill="#095ccc"/><text x="115" y="88" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">Left · Direct</text>
+<rect x="220" y="58" width="190" height="44" rx="8" fill="#007d89"/><text x="315" y="88" font-size="20" font-weight="700" fill="#fff" text-anchor="middle">Right · Via A1</text>
+<text x="115" y="132" font-size="17" fill="#173a51" text-anchor="middle">straight down to</text><text x="115" y="156" font-size="17" font-weight="700" fill="#173a51" text-anchor="middle">MTR concourse</text>
+<text x="315" y="132" font-size="17" fill="#173a51" text-anchor="middle">stops at A1 (Pok Fu Lam Rd)</text><text x="315" y="156" font-size="17" font-weight="700" fill="#173a51" text-anchor="middle">then MTR concourse</text>
+<text x="115" y="196" font-size="16" fill="#536e7e" text-anchor="middle">queue runs WEST</text><text x="115" y="218" font-size="16" fill="#536e7e" text-anchor="middle">(Side A)</text>
+<text x="315" y="196" font-size="16" fill="#536e7e" text-anchor="middle">queue runs EAST</text><text x="315" y="218" font-size="16" fill="#536e7e" text-anchor="middle">(Side B)</text></g>
+<g transform="translate(70 360)"><circle r="34" fill="#fff" stroke="#9fb2c2" stroke-width="2"/><path d="M0 -24L10 8H-10Z" fill="#173a51"/><text y="26" font-size="16" font-weight="700" fill="#173a51" text-anchor="middle">N</text></g>
+<text x="2370" y="985" font-size="18" fill="#3c5568" text-anchor="end">Simplified, not to scale</text>
+<g font-size="24" font-weight="800"><text x="40" y="560" fill="#095ccc" stroke="#e3f0d4" stroke-width="6" paint-order="stroke">← WEST</text><text x="2370" y="560" fill="#007d89" text-anchor="end" stroke="#e3f0d4" stroke-width="6" paint-order="stroke">EAST →</text></g>
+</svg>
