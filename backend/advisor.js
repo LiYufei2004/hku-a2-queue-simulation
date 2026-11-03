@@ -16,7 +16,8 @@ const M=isNode?require('./model-core.js'):root.QueueModel;
 const TP=isNode?require('./time-profile.js'):root.TimeProfile;
 
 const DEFAULTS={runs:100,branches:80,window:180,sample:5,minMatches:30};
-const BASE={walkModel:'document',spacing:.45,speed:1.3,scale:.025,beta:.05,cap:[20,20],cycle:[40,200],std:[4,20],lifts:4,sample:5,window:300};
+// Choice and walking settings follow the academic model; lifts come from the field-calibrated table.
+const BASE={walkModel:'document',spacing:.45,speed:1.3,scale:.025,beta:.05,...TP.LIFTS,sample:5,window:300};
 
 function validate(input){
  if(!input||typeof input!=='object')throw Error('Advisor input is required.');

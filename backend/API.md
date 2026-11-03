@@ -10,7 +10,8 @@ The mathematical model is version 4; API version 1 is an independent protocol ve
 - `backend/model-core.js`: NHPP arrivals, walking costs, Logit choice, lift events,
   queue conservation, replay and conditional sample aggregation.
 - `backend/time-profile.js`: Hong Kong time-of-day arrival profile for the passenger advisor
-  (editable, illustrative rates; class-end peaks at :50, lunch and dinner uplifts).
+  and the advisor's lift table (`LIFTS`), calibrated to the team's field measurements:
+  direct 48 people/min, via A1 14.4 people/min, ~25/min lecture-time and ~50/min peak arrivals.
 - `backend/advisor.js`: stay/switch estimates built on the same engine (see `advise`).
 - `backend/simulation-service.js`: public operations, parameter validation and
   plain-data results; also usable directly from Node.js without the frontend.
