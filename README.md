@@ -20,7 +20,17 @@ The page uses the same backend and engine as the academic page, through the same
 - a 10-minute peak after classes end at :50;
 - lower evening, weekend and night rates.
 
-These rates are illustrative and should be calibrated with field counts. The academic defaults (120 + 80 people/min) exceed total lift capacity (about 130 people/min), so the profile uses lower baselines. Otherwise queues would grow all day.
+The passenger advisor uses its own lift and arrival parameters, calibrated to the team's field measurements (CCST9017 project slides). The academic page keeps its defaults.
+- **Direct lifts:** 24 people per trip, 120 s round trip, 4 cabins, giving 48 people/min.
+- **Via-A1 lifts:** 12 people per trip, 200 s, 4 cabins, giving 14.4 people/min.
+- **Arrivals:**
+  - about 25/min during lectures (measured);
+  - about 50/min at the dinner peak (measured);
+  - lunch rises to 40/min (estimate);
+  - a +40/min surge for 10 minutes after classes end at :50 (estimate);
+  - 75% of arrivals use the west, direct-side entry.
+- With these numbers the simulation reproduces the measured ~80% direct share and the observed ~170-person direct queue at peak.
+- In the slides, "Right" means the direct queue; this page calls it left/direct.
 
 The user never enters the other queue. `backend/advisor.js` estimates its length from simulated snapshots that match the user's own queue at that time, `P(other | own, time)`. It then simulates staying versus walking over, using real lift events. Both pages link to each other.
 

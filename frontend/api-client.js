@@ -2,7 +2,7 @@
 (function(root){
 'use strict';
 const API_VERSION=1;
-const workerURL=new URL('../backend/worker.js?v=7',document.currentScript.src);
+const workerURL=new URL('../backend/worker.js?v=8',document.currentScript.src);
 
 class SimulationClient{
  constructor(){
