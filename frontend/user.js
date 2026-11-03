@@ -25,7 +25,8 @@ const T={
   other:(m,a,b)=>`The other queue (which you can't see) probably has about ${m} people (5–95% range: ${a}–${b}).`,
   histTitle:'Other queue length given your position (simulated)',people:'people',
   low:'Few simulated situations match your position at this time, so this estimate is rough.',
-  basis:(n,b)=>`Based on ${n} matching simulated snapshots and ${b} paired stay/switch simulations.`,
+  basis:(n,u,b)=>n>=u?`Based on ${n} matching simulated snapshots and ${b} paired stay/switch simulations.`:`Only ${n} simulated snapshots matched exactly, so the ${u} closest ones were used, with ${b} paired stay/switch simulations.`,
+  extrap:m=>`Your queue is longer than the model usually sees at this time (typically up to about ${m} people). Your position is kept as entered, but the wait times are extrapolated.`,
   under1:'under 1 min',min:x=>`${x} min`,
   how:'<p>Arrivals at Side A and Side B follow a time-of-day profile: weekday teaching hours, extra passengers at lunch (12:00–14:00) and dinner (17:30–19:30), and a 10-minute peak after classes end at :50. All rates are illustrative assumptions until calibrated with field counts.</p><p>The page runs the same simulation engine as the academic page in your browser. It simulates many independent queue histories around the current time and keeps the moments where your queue matches your position. That gives the probability distribution of the other queue\'s length, even though you cannot see it. From each matching moment it simulates both choices with real lift trips: staying in place, or walking to the other queue\'s tail (distance 0.45 m × people passed, at your walking speed) and joining it.</p><p>Times run until you board. They exclude the ride itself and assume most other passengers keep behaving as in the model.</p>'},
  zh:{title:'港大 A2 电梯排队助手',subtitle:'要不要换队？大概还要等多久？',toAcademic:'学术版模拟 →',lang:'EN',
@@ -45,7 +46,8 @@ const T={
   other:(m,a,b)=>`另一队（你看不到）大概有 ${m} 人（5–95% 范围：${a}–${b} 人）。`,
   histTitle:'根据你的位置推算的另一队人数（模拟）',people:'人',
   low:'这个时间段里和你位置相符的模拟情况较少，估计比较粗略。',
-  basis:(n,b)=>`基于 ${n} 个匹配的模拟快照，以及 ${b} 组留队/换队对照模拟。`,
+  basis:(n,u,b)=>n>=u?`基于 ${n} 个匹配的模拟快照，以及 ${b} 组留队/换队对照模拟。`:`只有 ${n} 个模拟快照完全匹配，因此使用了最接近的 ${u} 个，并做了 ${b} 组留队/换队对照模拟。`,
+  extrap:m=>`你这一队比模型在这个时段通常看到的更长（一般最多约 ${m} 人）。你的位置按输入保留，但等待时间是外推估计。`,
   under1:'不到 1 分钟',min:x=>`${x} 分钟`,
   how:'<p>Side A 与 Side B 的到达人流按时段设定：工作日上课时段为基础，午饭（12:00–14:00）和晚饭（17:30–19:30）人更多，每节课 :50 下课后有 10 分钟高峰。所有数值都是示意性假设，有实测数据后再校准。</p><p>页面在你的浏览器里运行和学术版相同的模拟引擎。它模拟当前时间前后的大量独立排队情况，只保留你这一队人数和你的位置相符的时刻，由此得到另一队人数的条件概率分布，所以你不用看到另一队。再从每个匹配时刻分别模拟两种选择，电梯按真实班次运行：一是原地不动，二是按你的步行速度走到另一队队尾排队（距离为 0.45 米 × 经过的人数）。</p><p>时间计到你上电梯为止，不含乘梯时间，并假设其他人仍按模型行为。</p>'}
 };
@@ -137,14 +139,15 @@ function renderResult(r){
  const box=$('result'),L=T[state.lang],other=1-r.input.queue;box.hidden=false;box.style.opacity=1;
  const best=r.recommendation==='switch'?'switch':'stay';
  const gain=r.timeSaved,gainText=gain>=0?fmtTime(gain):fmtTime(-gain);
- box.innerHTML=`<p class="verdict ${r.recommendation}">${L.verdict[r.recommendation](L.qname[other])}</p>
+ box.innerHTML=`<div class="resultgrid"><div><p class="verdict ${r.recommendation}">${L.verdict[r.recommendation](L.qname[other])}</p>
  <p class="small">${L.faster(Math.round(r.pSwitchFaster*100))} ${Math.abs(gain)>=30?L.saved(gain>=0,gainText):''}</p>
  <div class="compare"><div class="${best==='stay'?'best':''}"><span>${L.stayLbl}</span><strong>${fmtTime(r.stay.median)}</strong><span class="small">${L.range(fmtTime(r.stay.p10),fmtTime(r.stay.p90))}</span></div>
  <div class="${best==='switch'?'best':''}"><span>${L.switchLbl}</span><strong>${fmtTime(r.switch.median)}</strong><span class="small">${L.range(fmtTime(r.switch.p10),fmtTime(r.switch.p90))} · ${L.walkIncl(Math.round(r.switch.walk.median))}</span></div></div>
- ${r.lowConfidence?`<p class="warn">${L.low}</p>`:''}
+ ${r.extrapolated?`<p class="warn">${L.extrap(r.ownTypicalMax)}</p>`:r.lowConfidence?`<p class="warn">${L.low}</p>`:''}
+ </div><div>
  <p>${L.other(Math.round(r.otherQueue.median),Math.round(r.otherQueue.p05),Math.round(r.otherQueue.p95))}</p>
  <div class="small">${L.histTitle} (${L.people})</div>${histogramSVG(r.otherQueue.hist,other)}
- <p class="small">${L.basis(r.matches,r.branches)}</p>`;
+ <p class="small">${L.basis(r.matches,r.used??r.matches,r.branches)}</p></div></div>`;
 }
 $('go').addEventListener('click',async()=>{
  if(state.busy)return;state.busy=true;$('go').disabled=true;$('go').textContent=t('working');$('error').textContent='';
