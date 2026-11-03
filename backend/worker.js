@@ -1,5 +1,5 @@
 /* Transport adapter for the versioned simulation API. One worker per client. */
-importScripts('model-core.js?v=6','time-profile.js?v=6','advisor.js?v=6','simulation-service.js?v=6');
+importScripts('model-core.js?v=7','time-profile.js?v=7','advisor.js?v=7','simulation-service.js?v=7');
 'use strict';
 const Service=SimulationService;
 function send(id,type,payload){postMessage({apiVersion:Service.API_VERSION,id,type,...payload})}

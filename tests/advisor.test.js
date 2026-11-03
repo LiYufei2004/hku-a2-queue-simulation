@@ -24,6 +24,9 @@ const midnight=TP.paramsAround(at(6,23,55));assert.equal(Math.round(M.rateAt({ra
 // Engine clone continues identically; tagged hooks do not disturb untagged engines.
 const e=new M.Engine(p,'clone');e.advance(1000);const c=e.clone();e.advance(1600);c.advance(1600);assert.deepEqual(c.snapshot(),e.snapshot());
 const tagged=new M.Engine(p,'tag');tagged.advance(900);const q=tagged.q()[0];tagged.insertTagged(0,3);assert.equal(tagged.q()[0],q+1);tagged.advance(3000);assert(tagged.tagServedAt>900);
+// A position beyond the current queue is padded, never shortened.
+const padded=new M.Engine(p,'pad');padded.advance(900);const before=padded.q()[1];padded.insertTagged(1,before+50);assert.equal(padded.q()[1],before+51);
+assert.equal(padded.queues[1][padded.head[1]+before+50].tag,true,'tagged person has exactly `ahead` people in front');
 
 // Advisor behaviour.
 const small={runs:40,branches:30};
@@ -40,6 +43,12 @@ const slow=A.advise({...base,speed:.5}),fast=A.advise({...base,speed:2});
 assert(slow.switch.walk.median>fast.switch.walk.median,'walking time follows the user speed');
 assert.equal(A.advise({now:at(1,12,55),queue:0,ahead:0,speed:1.3,...small}).recommendation,'stay','never leave the front of the fast queue');
 const rare=A.advise({now:at(0,3,0),queue:0,ahead:300,speed:1.3,...small});assert.equal(rare.lowConfidence,true);assert(rare.otherQueue.n>=30);
+// Beyond the simulated range: waits and walks keep growing with the reported position.
+const longs=[143,210,329].map(ahead=>A.advise({now:at(1,12,55),queue:1,ahead,speed:1.3,...small}));
+assert(longs[0].stay.median<longs[1].stay.median&&longs[1].stay.median<longs[2].stay.median,'stay wait grows with ahead beyond the simulated queue');
+assert(longs[0].switch.walk.median<longs[1].switch.walk.median&&longs[1].switch.walk.median<longs[2].switch.walk.median,'walk uses the full position');
+assert(longs.every(r=>r.extrapolated&&r.ownTypicalMax<143&&r.used>=30));
+assert.equal(A.advise({...base,ahead:30}).extrapolated,false);
 for(const bad of [{...base,queue:2},{...base,ahead:-1},{...base,ahead:1.5},{...base,speed:0},{...base,now:{weekday:9,seconds:0}},{...base,runs:5}])assert.throws(()=>A.advise(bad));
 const t0=Date.now();A.advise({now:at(1,12,55),queue:1,ahead:40,speed:1.3});const elapsed=Date.now()-t0;
 console.log(`PASS: HK time profile (:50 class peaks, meals, weekends, midnight), engine clone/tag hooks, deterministic advisor, normalised conditional histogram, monotone waits, walking speed, low-confidence fallback, validation. Full request ${elapsed} ms.`);

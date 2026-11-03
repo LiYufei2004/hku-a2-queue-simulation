@@ -53,6 +53,9 @@ function advise(input){
  const used=lowConfidence?records.map((x,i)=>({x,i,d:distance(x)})).sort((a,b)=>a.d-b.d||a.i-b.i).slice(0,Math.max(opt.minMatches,matches.length)).map(o=>o.x):matches;
  const hist={};for(const x of used)hist[x.other]=(hist[x.other]||0)+1;
  const others=used.map(x=>x.other).sort((a,b)=>a-b);
+ // The user's queue can be longer than this time profile usually produces: their position
+ // is still honoured (insertTagged pads the queue), and the result is flagged as extrapolated.
+ const ownSorted=records.map(x=>x.own).sort((a,b)=>a-b),ownTypicalMax=Math.round(quantile(ownSorted,.95)),extrapolated=lowConfidence&&ahead>ownTypicalMax;
 
  // Pass 2: branch from an evenly spread subset of the used states (deterministic).
  const stride=Math.max(1,used.length/opt.branches),chosen=[];for(let j=0;j<used.length&&chosen.length<opt.branches;j+=stride)chosen.push(used[Math.floor(j)]);
@@ -64,7 +67,7 @@ function advise(input){
    const t0=ticks[k];e.advance(t0);const repeat=ks.filter(v=>v===k).length,limit=t0+3600;
    for(let n=0;n<repeat;n++){
     const a=e.clone().insertTagged(queue,ahead),resA=boardingWait(a,t0,limit);
-    const b=e.clone(),q=b.q(),walk=p.spacing*(Math.min(ahead,q[queue])+q[other])/input.speed;b.joinTagged(other,walk);const resB=boardingWait(b,t0,limit);
+    const b=e.clone(),q=b.q(),walk=p.spacing*(ahead+q[other])/input.speed;b.joinTagged(other,walk);const resB=boardingWait(b,t0,limit);
     stay.push(resA.wait);sw.push(resB.wait);walks.push(walk);censored+=resA.censored+resB.censored;
     switchFaster+=resB.wait<resA.wait?1:resB.wait===resA.wait?.5:0;
    }
@@ -76,7 +79,7 @@ function advise(input){
   input:{queue,ahead,speed:input.speed},clock:frag.clock,period:frag.current.labels,entryRates:frag.current.rate,
   recommendation,pSwitchFaster:pSwitch,timeSaved:gain,stay:stayS,switch:{...swS,walk:summary(walks)},
   otherQueue:{hist,n:used.length,median:quantile(others,.5),p05:quantile(others,.05),p95:quantile(others,.95)},
-  matches:matches.length,snapshots:records.length,branches:stay.length,censored,lowConfidence,band
+  matches:matches.length,used:used.length,snapshots:records.length,branches:stay.length,censored,lowConfidence,extrapolated,ownTypicalMax,band
  };
 }
 const api={DEFAULTS,validate,advise};root.Advisor=api;if(isNode)module.exports=api;
