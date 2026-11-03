@@ -5,24 +5,18 @@ const $=id=>document.getElementById(id);
 const SVGNS='http://www.w3.org/2000/svg';
 const client=new SimulationAPI.Client();
 
-// Landmarks: approximate people ahead when standing there. On-map distances follow the
-// backend layout (18 px per person); off-map ones extend the queue past each entrance.
-const LANDMARKS=[
- [{n:0,key:'lmDoor'},{n:7,key:'lmLobbyL'},{n:17,key:'lmLowerA'},{n:28,key:'lmBendA'},{n:40,key:'lmMidA'},{n:52,key:'lmEntryA'},{n:80,key:'lmUniMid'},{n:120,key:'lmUniLib'}],
- [{n:0,key:'lmDoor'},{n:8,key:'lmLobbyR'},{n:17,key:'lmPartition'},{n:21,key:'lmBendB'},{n:38,key:'lmMidB'},{n:55,key:'lmEntryB'},{n:85,key:'lmCYC'},{n:120,key:'lmCYCfar'}]
-];
+// Map, queue paths and landmarks come from campus-map.js (presentation data only).
+const MAP=CampusMap;
 const T={
  en:{title:'HKU A2 Lift Queue Advisor',subtitle:'Should you switch queues? Roughly how long will you wait?',toAcademic:'Academic simulation →',lang:'中文',
   nowTitle:'Time now (Hong Kong)',override:'Try a different time',speedTitle:'Your walking speed',slow:'Slow',normal:'Normal',fast:'Fast',custom:'Custom (m/s)',
   queueTitle:'Which queue are you in?',leftQ:'Left · Direct lifts',leftQs:'Side A / west corridor',rightQ:'Right · Lifts via A1',rightQs:'Side B / east corridor',
-  whereTitle:'Where are you in the queue?',mapHint:'Swipe the map sideways to see both corridors.',whereHelp:'Tap your spot on the map or pick the nearest landmark, then fine-tune the number of people ahead of you.',
+  whereTitle:'Where are you in the queue?',mapHint:'Swipe the map sideways to see the whole street.',whereHelp:'Tap your spot on the map or pick the nearest landmark, then fine-tune the number of people ahead of you.',
   ahead:'People ahead of you',go:'Should I switch?',working:'Simulating…',howTitle:'How is this estimated?',
   days:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
   period:{teaching:'Teaching hours',offpeak:'Off-peak',weekend:'Weekend',night:'Night',lunch:'Lunch time',dinner:'Dinner time',classEnd:'Classes just ended (:50)'},
-  lmDoor:'At the lift door',lmLobbyL:'Left lift lobby',lmLowerA:'Side A corridor, lower part',lmBendA:'Side A corridor bend',lmMidA:'Side A corridor, middle',lmEntryA:'Side A entrance',
-  lmUniMid:'University Street, middle section',lmUniLib:'University Street, near Library / Kadoorie',
-  lmLobbyR:'Right lift lobby',lmPartition:'End of the glass partition',lmBendB:'Side B corridor bend',lmMidB:'Side B corridor, middle',lmEntryB:'Side B entrance',
-  lmCYC:'In front of Chow Yei Ching Building',lmCYCfar:'Past Chow Yei Ching (towards Centennial)',
+  lmDoor:'At the lift door',lmStreet:'Just out on University Street',lmHWmid:'In front of Haking Wong (middle)',lmHWwest:'Haking Wong, west end',lmBridgeE:'Footbridge, east end',lmBridgeMid:'Footbridge, middle (above Kadoorie)',lmBridgeW:'Footbridge, west end',lmLibrary:'In front of the Library',
+  lmHWeast:'Haking Wong, east end',lmSKYLee:'In front of Simon K.Y. Lee Hall',lmComposite:'In front of Composite Building',lmCYC:'In front of Chow Yei Ching Building',lmCYCpast:'Past Chow Yei Ching',lmJCT:'In front of Jockey Club Tower',
   offMap:n=>`Beyond the map: about ${n} people ahead`,approx:n=>`≈ ${n} ahead`,
   verdict:{switch:q=>`Switch to the ${q} queue`,stay:()=>'Stay in your queue',close:()=>'Close call: staying is fine'},
   qname:['left (direct)','right (via A1)'],
@@ -37,14 +31,12 @@ const T={
  zh:{title:'港大 A2 电梯排队助手',subtitle:'要不要换队？大概还要等多久？',toAcademic:'学术版模拟 →',lang:'EN',
   nowTitle:'现在时间（香港）',override:'换一个时间试试',speedTitle:'你的步行速度',slow:'慢',normal:'一般',fast:'快',custom:'自定义（米/秒）',
   queueTitle:'你现在在哪一队？',leftQ:'左队 · 直达电梯',leftQs:'Side A / 西侧走廊',rightQ:'右队 · 经 A1 电梯',rightQs:'Side B / 东侧走廊',
-  whereTitle:'你排到哪里了？',mapHint:'左右滑动地图可以看到两条走廊。',whereHelp:'在图上点你所在的位置，或选最近的地标，再微调你前面大约有多少人。',
+  whereTitle:'你排到哪里了？',mapHint:'左右滑动地图可以看到整条街。',whereHelp:'在图上点你所在的位置，或选最近的地标，再微调你前面大约有多少人。',
   ahead:'你前面的人数',go:'要不要换队？',working:'模拟中…',howTitle:'这是怎么估算的？',
   days:['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
   period:{teaching:'上课时段',offpeak:'非高峰',weekend:'周末',night:'夜间',lunch:'午饭时间',dinner:'晚饭时间',classEnd:'刚下课（:50）'},
-  lmDoor:'电梯门口',lmLobbyL:'左侧电梯厅',lmLowerA:'Side A 走廊下段',lmBendA:'Side A 走廊转角',lmMidA:'Side A 走廊中段',lmEntryA:'Side A 入口',
-  lmUniMid:'University Street 中段',lmUniLib:'University Street 靠图书馆 / Kadoorie',
-  lmLobbyR:'右侧电梯厅',lmPartition:'玻璃隔断尽头',lmBendB:'Side B 走廊转角',lmMidB:'Side B 走廊中段',lmEntryB:'Side B 入口',
-  lmCYC:'周亦卿楼（Chow Yei Ching）前面',lmCYCfar:'过了周亦卿楼（往 Centennial 方向）',
+  lmDoor:'电梯门口',lmStreet:'刚出到 University Street',lmHWmid:'Haking Wong 楼前（中段）',lmHWwest:'Haking Wong 西端',lmBridgeE:'天桥东端',lmBridgeMid:'天桥中段（Kadoorie 上方）',lmBridgeW:'天桥西端',lmLibrary:'图书馆前',
+  lmHWeast:'Haking Wong 东端',lmSKYLee:'Simon K.Y. Lee Hall 前',lmComposite:'Composite Building 前',lmCYC:'周亦卿楼（Chow Yei Ching）前',lmCYCpast:'过了周亦卿楼',lmJCT:'Jockey Club Tower 前',
   offMap:n=>`超出图的范围：前面大约 ${n} 人`,approx:n=>`≈ 前面 ${n} 人`,
   verdict:{switch:q=>`建议换到${q}`,stay:()=>'建议留在原队',close:()=>'差不多，留在原队就好'},
   qname:['左队（直达）','右队（经 A1）'],
@@ -57,7 +49,7 @@ const T={
   under1:'不到 1 分钟',min:x=>`${x} 分钟`,
   how:'<p>Side A 与 Side B 的到达人流按时段设定：工作日上课时段为基础，午饭（12:00–14:00）和晚饭（17:30–19:30）人更多，每节课 :50 下课后有 10 分钟高峰。所有数值都是示意性假设，有实测数据后再校准。</p><p>页面在你的浏览器里运行和学术版相同的模拟引擎。它模拟当前时间前后的大量独立排队情况，只保留你这一队人数和你的位置相符的时刻，由此得到另一队人数的条件概率分布，所以你不用看到另一队。再从每个匹配时刻分别模拟两种选择，电梯按真实班次运行：一是原地不动，二是按你的步行速度走到另一队队尾排队（距离为 0.45 米 × 经过的人数）。</p><p>时间计到你上电梯为止，不含乘梯时间，并假设其他人仍按模型行为。</p>'}
 };
-const state={lang:'en',queue:0,ahead:20,speed:1.3,layout:null,lastResult:null,busy:false};
+const state={lang:'en',queue:0,ahead:40,speed:1.3,lastResult:null,busy:false};
 try{const saved=localStorage.getItem('a2-advisor-lang');if(saved==='zh'||saved==='en')state.lang=saved}catch(e){}
 const t=key=>T[state.lang][key];
 
@@ -85,42 +77,41 @@ async function refreshClock(){
 
 // ---------- Map overlay ----------
 function el(name,attrs,parent){const n=document.createElementNS(SVGNS,name);for(const k in attrs)n.setAttribute(k,attrs[k]);if(parent)parent.append(n);return n}
-function nearestOnPath(path,x,y){let best={d2:Infinity,dist:0},acc=0;for(let k=1;k<path.length;k++){const a=path[k-1],b=path[k],dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy),u=Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/(len*len))),px=a[0]+u*dx,py=a[1]+u*dy,d2=(x-px)**2+(y-py)**2;if(d2<best.d2)best={d2,dist:acc+u*len};acc+=len}return best}
+const COLORS=['#095ccc','#007d89'];
 function drawOverlay(){
- const L=state.layout,svg=$('overlay');if(!L)return;svg.innerHTML='';
- const sp=L.personSpacingPixels,pts=p=>p.map(v=>v.join(',')).join(' ');
- L.paths.forEach((path,i)=>{const sel=i===state.queue,color=i?'#007d89':'#095ccc';
-  el('polyline',{points:pts(path),fill:'none',stroke:color,'stroke-width':sel?14:6,'stroke-opacity':sel?.28:.12,'stroke-linecap':'round','stroke-linejoin':'round'},svg);
-  if(!sel)return;
-  for(let n=10;n*sp<=L.lengths[i];n+=10){const [x,y]=MapGeometry.position(path,n*sp);el('circle',{cx:x,cy:y,r:5,fill:color},svg);const tx=el('text',{x:x+12,y:y-8,'font-size':18,fill:color,'font-weight':700},svg);tx.textContent=n}
- });
- const path=L.paths[state.queue],color=state.queue?'#007d89':'#095ccc';
- for(const lm of LANDMARKS[state.queue]){if(lm.n*sp>L.lengths[state.queue])continue;const [x,y]=MapGeometry.position(path,lm.n*sp);
-  const g=el('g',{style:'cursor:pointer'},svg);el('circle',{cx:x,cy:y,r:11,fill:'#fff',stroke:color,'stroke-width':4},g);g.addEventListener('click',ev=>{ev.stopPropagation();setAhead(lm.n)})}
- const d=state.ahead*sp,off=d>L.lengths[state.queue],[x,y]=MapGeometry.position(path,Math.min(d,L.lengths[state.queue]));
- el('circle',{cx:x,cy:y,r:20,fill:'#d93a3f','fill-opacity':.2},svg);el('circle',{cx:x,cy:y,r:11,fill:'#d93a3f',stroke:'#fff','stroke-width':4},svg);
- const label=el('text',{x:x+(state.queue?0:18),y:y+(state.queue?-26:42),'font-size':22,'font-weight':800,fill:'#d93a3f','text-anchor':state.queue?'middle':'start',stroke:'#fff','stroke-width':6,'paint-order':'stroke'},svg);
- label.textContent=(state.lang==='zh'?'你 · ':'You · ')+(off?'+':'')+state.ahead;
+ const svg=$('overlay');svg.innerHTML='';const pts=p=>p.map(v=>v.join(',')).join(' ');
+ MAP.paths.forEach((path,i)=>{const sel=i===state.queue;el('polyline',{points:pts(path),fill:'none',stroke:COLORS[i],'stroke-width':sel?16:7,'stroke-opacity':sel?.45:.18,'stroke-linecap':'round','stroke-linejoin':'round'},svg)});
+ const q=state.queue,path=MAP.paths[q],color=COLORS[q],len=MAP.lengths[q];
+ for(let n=50;MAP.toDistance(n)<=len;n+=50){const [x,y]=MAP.position(path,MAP.toDistance(n));el('line',{x1:x,y1:y-12,x2:x,y2:y+12,stroke:color,'stroke-width':3},svg);const tx=el('text',{x,y:y-16,'font-size':17,'font-weight':700,fill:color,'text-anchor':'middle'},svg);tx.textContent=n}
+ for(const lm of MAP.landmarks[q]){const [x,y]=MAP.position(path,lm.d),g=el('g',{style:'cursor:pointer'},svg);
+  el('circle',{cx:x,cy:y,r:13,fill:'#fff',stroke:color,'stroke-width':5},g);
+  if(lm.n>0){const tx=el('text',{x,y:y+38,'font-size':19,'font-weight':800,fill:color,'text-anchor':'middle',stroke:'#fff','stroke-width':5,'paint-order':'stroke'},g);tx.textContent='≈'+lm.n}
+  const title=el('title',{},g);title.textContent=`${t(lm.key)} · ${t('approx')(lm.n)}`;
+  g.addEventListener('click',ev=>{ev.stopPropagation();setAhead(lm.n,false)})}
+ const d=MAP.toDistance(state.ahead),off=d>len,[x,y]=MAP.position(path,Math.min(d,len));
+ el('circle',{cx:x,cy:y,r:26,fill:'#d93a3f','fill-opacity':.22},svg);el('circle',{cx:x,cy:y,r:14,fill:'#d93a3f',stroke:'#fff','stroke-width':5},svg);
+ const label=el('text',{x,y:y-34,'font-size':28,'font-weight':800,fill:'#d93a3f','text-anchor':'middle',stroke:'#fff','stroke-width':7,'paint-order':'stroke'},svg);
+ label.textContent=(state.lang==='zh'?'你 · ':'You · ')+(off?'>':'')+state.ahead;
  state.marker=[x,y];
 }
-function overlayPoint(ev){const svg=$('overlay'),r=svg.getBoundingClientRect();return [(ev.clientX-r.left)*1536/r.width,(ev.clientY-r.top)*1024/r.height]}
+function overlayPoint(ev){const svg=$('overlay'),r=svg.getBoundingClientRect();return [(ev.clientX-r.left)*MAP.VIEW.width/r.width,(ev.clientY-r.top)*MAP.VIEW.height/r.height]}
 $('overlay').addEventListener('click',ev=>{
- const L=state.layout;if(!L)return;const [x,y]=overlayPoint(ev);
- const hits=L.paths.map((p,i)=>({i,...nearestOnPath(p,x,y)}));const best=hits.sort((a,b)=>a.d2-b.d2)[0];
- if(best.d2>90*90)return;
+ const [x,y]=overlayPoint(ev);
+ const best=MAP.paths.map((p,i)=>({i,...MAP.nearest(i,x,y)})).sort((a,b)=>a.d2-b.d2)[0];
+ if(best.d2>120*120)return;
  if(best.i!==state.queue)setQueue(best.i,false);
- setAhead(Math.round(best.dist/L.personSpacingPixels),false);
+ setAhead(MAP.toPeople(best.dist),false);
 });
 
 // ---------- Inputs ----------
 function renderLandmarks(){
  const box=$('landmarks');box.innerHTML='';
- for(const lm of LANDMARKS[state.queue]){const b=document.createElement('button');b.type='button';b.textContent=`${t(lm.key)} · ${t('approx')(lm.n)}`;b.setAttribute('aria-pressed',String(lm.n===state.ahead));b.onclick=()=>setAhead(lm.n);box.append(b)}
+ for(const lm of MAP.landmarks[state.queue]){const b=document.createElement('button');b.type='button';b.textContent=`${t(lm.key)} · ${t('approx')(lm.n)}`;b.setAttribute('aria-pressed',String(lm.n===state.ahead));b.onclick=()=>setAhead(lm.n);box.append(b)}
 }
-function aheadNote(){const L=state.layout;if(!L)return '';const beyond=state.ahead*L.personSpacingPixels>L.lengths[state.queue];return beyond?t('offMap')(state.ahead):''}
+function aheadNote(){return state.ahead>MAP.capacity[state.queue]?t('offMap')(state.ahead):''}
 // On narrow screens the map scrolls sideways: keep the user's marker in view.
-function revealMarker(){const w=$('mapwrap');if(!state.marker||w.scrollWidth<=w.clientWidth)return;const x=state.marker[0]/1536*w.scrollWidth;w.scrollTo({left:Math.max(0,x-w.clientWidth/2),behavior:'smooth'})}
-function setAhead(n,reveal=true){state.ahead=Math.max(0,Math.min(200,n|0));$('ahead').value=state.ahead;$('aheadOut').textContent=state.ahead;$('aheadNote').textContent=aheadNote();renderLandmarks();drawOverlay();if(reveal)revealMarker();markStale()}
+function revealMarker(){const w=$('mapwrap');if(!state.marker||w.scrollWidth<=w.clientWidth)return;const x=state.marker[0]/MAP.VIEW.width*w.scrollWidth;w.scrollTo({left:Math.max(0,x-w.clientWidth/2),behavior:'smooth'})}
+function setAhead(n,reveal=true){state.ahead=Math.max(0,Math.min(400,n|0));$('ahead').value=state.ahead;$('aheadOut').textContent=state.ahead;$('aheadNote').textContent=aheadNote();renderLandmarks();drawOverlay();if(reveal)revealMarker();markStale()}
 function setQueue(q,keep=true){state.queue=q;for(const b of $('queueSeg').children)b.setAttribute('aria-pressed',String(+b.dataset.queue===q));if(keep)setAhead(state.ahead);else{renderLandmarks();drawOverlay()}markStale()}
 function setSpeed(v){state.speed=v;$('speed').value=v;for(const b of $('speedSeg').children)b.setAttribute('aria-pressed',String(Math.abs(+b.dataset.speed-v)<1e-9));markStale()}
 function markStale(){if(state.lastResult)$('result').style.opacity=.55}
@@ -175,7 +166,7 @@ $('lang').addEventListener('click',()=>{state.lang=state.lang==='en'?'zh':'en';t
 
 (async()=>{
  applyLang();
- try{state.layout=await client.layout();setAhead(state.ahead)}catch(e){$('error').textContent=e.message}
+ setAhead(state.ahead);
  setInterval(()=>{if(!$('useOverride').checked)refreshClock()},30000);
 })();
 })();

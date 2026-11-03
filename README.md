@@ -6,7 +6,13 @@ Passenger advisor: https://liyufei2004.github.io/hku-a2-queue-simulation/fronten
 
 ## Passenger advisor (user page)
 
-`frontend/user.html` is a mobile-first page for people standing in the queue. It reads the current Hong Kong time. The user picks a walking speed and the queue they are in. They then tap their position on a redrawn schematic (`frontend/assets/a2-schematic.svg`), or choose a landmark such as "University Street, middle section" or "In front of Chow Yei Ching Building". The page answers stay or switch, with estimated waits for both options. Side A is the west entrance (University Street / Library / Kadoorie); Side B is the east entrance (Chow Yei Ching).
+`frontend/user.html` is a mobile-first page for people standing in the queue. It reads the current Hong Kong time. The user picks a walking speed and the queue they are in. They then tap their position on a campus map of University Street (`frontend/assets/campus-map.svg`), or choose a landmark. The page answers stay or switch, with estimated waits for both options.
+
+On the map, the A2 lift tower stands in front of Haking Wong Building:
+- The left (direct) queue runs west, past Haking Wong and along the University Street footbridge (above Kadoorie), towards the Library.
+- The right (via A1) queue runs east, past Simon K.Y. Lee Hall, Composite Building and Chow Yei Ching Building, towards Jockey Club Tower.
+
+Queue paths and landmarks live in `frontend/campus-map.js`. People counts use 0.45 m per person and are estimates: the map is simplified, not to scale. Calibrate them with `PX_PER_PERSON`, or give a landmark an explicit `n`.
 
 The page uses the same backend and engine as the academic page, through the same API client. `backend/time-profile.js` holds the time-of-day profile:
 - weekday teaching hours;
