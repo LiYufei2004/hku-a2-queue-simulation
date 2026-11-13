@@ -1,21 +1,25 @@
 /* Time-of-day arrival profile and lift parameters for the passenger advisor.
  * Pure data in/out; no DOM. Times are Hong Kong local time, independent of the device.
  *
- * Calibrated to the team's field measurements (CCST9017 project slides). Those slides call the
- * direct queue "Right" and the A1-stopping queue "Left"; here everything is by lift type:
- *  - Direct lifts: 24 people per trip, 120 s round trip, 4 cabins  -> 48 people/min.
- *  - Via-A1 lifts: 12 people per trip (some ride up from A1 to hold a place), 200 s, 4 cabins
- *    -> 14.4 people/min.
- *  - Arrivals: ~50/min at peak (18:00-18:45; 50-55 in extreme cases), ~25/min during lectures
- *    (14:00); about 80% choose the direct queue. Observed direct queue ~170 people at peak.
- * Lunch, weekend, evening and night rates and the class-end surge size are estimates chosen so
- * the simulated peaks match the observed queue lengths. The academic page keeps its own defaults.
+ * Calibrated to the team's field measurements (CCST9017 project slides, with later corrections).
+ * The slides call the direct queue "Right" and the A1-stopping queue "Left"; here everything is
+ * by lift type:
+ *  - Round trips (timing diagram): direct 30 s dwell + 30 s travel each way = 120 s;
+ *    via A1 4 x 30 s dwell + 4 x 20 s travel = 200 s. 4 cabins each.
+ *  - A full cabin takes 15 people. The A1-stopping lift reaches A2 already holding people who
+ *    rode up from A1 to keep a place, so only about 4-5 people board at A2.
+ *  - Throughput: direct 4 x 15 / 120 s = 30 people/min; via A1 4 x 4 / 200 s = 4.8 people/min.
+ *  - Arrivals: ~25/min during lectures (14:00); 50-55/min at the most extreme peaks; about 80%
+ *    choose the direct queue; the direct queue holds ~170 people at the dinner peak.
+ * Lunch, dinner, weekend, evening and night levels and the class-end surge size are estimates
+ * chosen so the simulated peaks match those observations. The academic page keeps its own defaults.
  */
 (function(root){
 'use strict';
 // Advisor lift parameters (model units: people, seconds). The model draws each trip's
-// capacity from max(1,C-4)..C with mean C-2, so C=26/14 gives the measured 24/12 per trip.
-const LIFTS={lifts:4,cap:[26,14],cycle:[120,200],std:[12,20]};
+// capacity from max(1,C-4)..C with mean C-2, so C=17/6 gives 15 per direct trip and about 4
+// per via-A1 trip at A2.
+const LIFTS={lifts:4,cap:[17,6],cycle:[120,200],std:[12,20]};
 // Total arrivals in people/minute, split between the entries: Side A (west, direct-lift side)
 // and Side B (east, via-A1 side). The split reproduces the measured ~80% direct share.
 const SPLIT=[.75,.25];
@@ -25,13 +29,14 @@ const PROFILE={
  weekdayEvening:{from:'07:00',to:'23:00',total:12},   // estimate: weekday outside the teaching day
  weekend:{from:'08:00',to:'22:00',total:12},          // estimate: Saturday and Sunday
  night:{total:3},                                      // estimate: any remaining hours
- // Meal periods raise the level: lunch to 40/min (estimate), dinner to 50/min (measured peak).
- meals:[{name:'lunch',from:'12:00',to:'14:00',add:15},{name:'dinner',from:'17:30',to:'19:30',add:25}],
- // Weekday class-ending peaks: classes end at :50, +40/min for 10 minutes. Sized so dinner
- // peaks reach the observed ~170-250-person direct queue and clear within ~20 minutes.
- classEnd:{minute:50,duration:10,firstHour:8,lastHour:18,add:40},
- // Simulation window around "now": warm-up before (covers the previous :50 surge), horizon after.
- warmup:1800,horizon:2400
+ // Meal periods raise the level: lunch to 28/min, dinner to 30/min (just under the ~35/min lift
+ // capacity, so a dinner surge leaves a long-lasting queue of ~100-200, as observed).
+ meals:[{name:'lunch',from:'12:00',to:'14:00',add:3},{name:'dinner',from:'17:30',to:'19:30',add:5}],
+ // Weekday class-ending peaks: classes end at :50, +25/min for 10 minutes (dinner peak 55/min,
+ // the measured extreme). A daytime surge builds a ~140-person direct queue that clears in ~20 min.
+ classEnd:{minute:50,duration:10,firstHour:8,lastHour:18,add:25},
+ // Simulation window around "now": warm-up before (covers the previous hour's surge), horizon after.
+ warmup:3600,horizon:2400
 };
 const split=total=>SPLIT.map(f=>total*f);
 const WEEKDAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];

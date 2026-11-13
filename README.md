@@ -20,16 +20,15 @@ The page uses the same backend and engine as the academic page, through the same
 - a 10-minute peak after classes end at :50;
 - lower evening, weekend and night rates.
 
-The passenger advisor uses its own lift and arrival parameters, calibrated to the team's field measurements (CCST9017 project slides). The academic page keeps its defaults.
-- **Direct lifts:** 24 people per trip, 120 s round trip, 4 cabins, giving 48 people/min.
-- **Via-A1 lifts:** 12 people per trip, 200 s, 4 cabins, giving 14.4 people/min.
-- **Arrivals:**
+The passenger advisor uses its own lift and arrival parameters, calibrated to the team's field measurements (CCST9017 project slides, with later corrections). The academic page keeps its defaults.
+- **Direct lifts:** 15 people per full cabin, 120 s round trip (30 s dwell and 30 s travel each way), 4 cabins, giving 30 people/min.
+- **Via-A1 lifts:** 200 s round trip (four 30 s stops and four 20 s legs), 4 cabins. People ride up from A1 to keep a place, so only about 4–5 board at A2, giving about 4.8 people/min.
+- **Arrivals** (total, 75% at the west/direct-side entry):
   - about 25/min during lectures (measured);
-  - about 50/min at the dinner peak (measured);
-  - lunch rises to 40/min (estimate);
-  - a +40/min surge for 10 minutes after classes end at :50 (estimate);
-  - 75% of arrivals use the west, direct-side entry.
-- With these numbers the simulation reproduces the measured ~80% direct share and the observed ~170-person direct queue at peak.
+  - lunch 28/min and dinner 30/min, just under lift capacity;
+  - +25/min for 10 minutes after classes end at :50, so the dinner peak reaches the measured extreme of 55/min.
+- With these numbers the simulation reproduces the ~80% preference for the direct lifts and a long-lasting dinner-time direct queue of about 100–200 people (observed: about 170).
+- On the map, the corner from the lift door to University Street holds about 50 people (field observation); along the street the density is unchanged. `CORNER_PEOPLE` and `PX_PER_PERSON` in `frontend/campus-map.js` set this.
 - In the slides, "Right" means the direct queue; this page calls it left/direct.
 
 The user never enters the other queue. `backend/advisor.js` estimates its length from simulated snapshots that match the user's own queue at that time, `P(other | own, time)`. It then simulates staying versus walking over, using real lift events. Both pages link to each other.

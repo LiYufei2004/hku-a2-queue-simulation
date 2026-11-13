@@ -1,37 +1,200 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HKU A2 · Lift Queue Choice Model</title>
 <style>
-:root{--ink:#173a51;--blue:#095ccc;--teal:#007d89;--paper:#f3f7fa;--line:#ccdbe5;--muted:#536e7e}*{box-sizing:border-box}body{margin:0;font:14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}header{background:#124761;color:#fff;padding:24px 4vw;border-bottom:5px solid #1f9da9}header h1{margin:0;font-size:26px;font-weight:650}header p{margin:6px 0 0;color:#d3e8ef}main{max-width:1480px;margin:auto;padding:22px;display:grid;grid-template-columns:320px minmax(0,1fr);gap:22px}aside,.panel{background:white;border:1px solid var(--line);padding:20px;border-radius:8px}aside{align-self:start}h2{margin:0 0 12px;font-size:18px}h3{margin:18px 0 10px;font-size:15px}label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0}input,select,button{font:inherit;color:inherit;border:1px solid #adc2d1;border-radius:5px;padding:7px;background:white}input{width:95px;flex-shrink:0}aside select{width:145px}aside label{font-size:13px} .compare .small{overflow-wrap:anywhere}input[type=range]{width:auto;flex:1;min-width:100px;accent-color:var(--blue)}button{cursor:pointer}button:disabled{opacity:.5;cursor:default}button.primary{background:var(--blue);color:white;border-color:var(--blue)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f2ba58;outline-offset:2px}.wide{width:100%;margin-top:8px}.note{font-size:12px;color:var(--muted);line-height:1.8}.right{display:grid;gap:18px}.strip{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border:1px solid var(--line);border-radius:8px}.strip>div{padding:16px;border-right:1px solid var(--line)}.strip>div:last-child{border:0}.number{display:block;font-size:28px;font-weight:650}.blue{color:var(--blue)}.teal{color:var(--teal)}.map{position:relative;overflow:hidden;padding:0}.map img{width:100%;display:block}.map svg{position:absolute;left:0;top:0;width:100%;aspect-ratio:3/2;pointer-events:none}.liftbanks,.twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px}.liftbanks{padding:14px;background:#f7fafc}.liftbanks div{font-size:12px}.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.decision{border-left:5px solid var(--blue)}.decision h2{margin:0 0 8px}.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}.compare>div{background:#f1f6fa;padding:14px}.compare strong{font-size:22px}.small{font-size:12px;color:var(--muted)}canvas{width:100%;height:190px;display:block}progress{width:100%;margin-top:14px;accent-color:var(--blue)}hr{border:0;border-top:1px solid var(--line);margin:20px 0}details{margin-top:15px}summary{cursor:pointer}code{font-size:12px}table{border-collapse:collapse;width:100%;font-size:12px}td,th{text-align:left;padding:8px;border-bottom:1px solid var(--line)}.pill{background:#deeff4;display:inline-block;padding:3px 8px;border-radius:4px;font-size:12px}@media(max-width:900px){main{grid-template-columns:1fr;padding:12px}.strip{grid-template-columns:1fr 1fr}.twocol{grid-template-columns:1fr}.strip>div:nth-child(2){border-right:0}.liftbanks{gap:8px}.compare strong{font-size:18px}}
+:root{--ink:#173a51;--blue:#095ccc;--teal:#007d89;--paper:#f3f7fa;--card:#fff;--line:#ccdbe5;--muted:#536e7e;--soft:#eaf2f8;--header:#124761;--accent:#1f9da9}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink);background:var(--paper)}
+header{background:var(--header);color:#fff;padding:18px 0 16px;border-bottom:5px solid var(--accent)}
+.bar{max-width:1440px;margin:0 auto;padding:0 22px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+header h1{margin:0;font-size:23px;font-weight:650;line-height:1.25}
+header p{margin:2px 0 0;font-size:14px;line-height:1.4;color:#d3e8ef}
+.nav{display:flex;gap:8px;align-items:center;flex:none;flex-wrap:wrap}
+.langpick,.nav a{box-sizing:border-box;height:34px;margin:0;display:inline-flex;align-items:center;justify-content:center;padding:0 14px;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.55);border-radius:999px;font:13px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer;width:auto;max-width:none}
+.langpick{appearance:none;-webkit-appearance:none;padding:0 30px 0 14px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23fff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:10px 6px}
+.langpick option{color:#173a51;background:#fff}
+.nav a:hover{background:rgba(255,255,255,.12)}
+.langpick:hover{background-color:rgba(255,255,255,.12)}
+main{max-width:1440px;margin:0 auto;padding:16px 22px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:14px;align-items:start}
+aside,.panel{background:var(--card);border:1px solid var(--line);border-radius:14px}
+aside{padding:16px;position:sticky;top:16px;max-height:calc(100vh - 32px);display:flex;flex-direction:column;overflow:hidden}
+aside h2{margin:0 0 10px;font-size:16px}
+.fields{flex:1 1 auto;min-height:0;overflow:auto;padding-right:4px}
+aside label,.field{display:flex;flex-direction:column;align-items:stretch;gap:4px;margin:0 0 10px;font-size:14px;font-weight:650;color:var(--muted)}
+.field{max-width:320px}
+aside input,aside select,.field select{width:100%;font:inherit;font-size:15px;font-weight:550;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff}
+aside details{border-top:1px solid var(--line);margin:4px 0 0;padding-top:8px}
+aside details summary{display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:pointer;font-size:15px;font-weight:650;color:var(--ink);padding:4px 0 8px;list-style:none}
+aside details summary::-webkit-details-marker{display:none}
+aside details summary::after{content:"";width:7px;height:7px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-top:-3px;flex:none}
+aside details[open] summary::after{transform:rotate(-135deg);margin-top:3px}
+aside h3{margin:8px 0;font-size:15px}
+.actions{flex:none;border-top:1px solid var(--line);padding-top:12px;margin-top:8px;background:#fff}
+h2{margin:0 0 10px;font-size:16px}
+h3{margin:0 0 8px;font-size:15px}
+input,select,button{font:inherit;color:inherit;min-width:0;max-width:100%}
+button{cursor:pointer;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:#fff}
+button:hover{background:var(--soft)}
+button:disabled{opacity:.5;cursor:default}
+button:disabled:hover{background:#fff}
+button.primary{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:650}
+button.primary:hover{background:#0e3044}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #f2ba58;outline-offset:2px}
+.wide{width:100%;margin-top:8px}
+.note{font-size:14px;color:var(--muted);line-height:1.55;margin:0 0 10px}
+.right{display:grid;gap:14px}
+.strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.metric{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.metric.left{border-top:3px solid var(--blue)}
+.metric.right{border-top:3px solid var(--teal)}
+.metric .kicker{display:block;font-size:16px;font-weight:700;line-height:1.25}
+.number{display:block;font-size:30px;font-weight:680;font-variant-numeric:tabular-nums;margin-top:2px}
+.blue{color:var(--blue)}.teal{color:var(--teal)}
+.panel{padding:16px}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--soft);border-radius:12px;padding:8px}
+#play{border-radius:999px;background:var(--ink);color:#fff;border-color:var(--ink);font-weight:650;padding:8px 16px}
+#play:hover{background:#0e3044}
+#clock{font-weight:750;font-variant-numeric:tabular-nums;min-width:7.2ch}
+#seek{flex:1;min-width:100px;accent-color:var(--blue)}
+#speed{width:auto;border:1px solid var(--line);border-radius:8px;padding:7px 8px;background:#fff}
+.plot{background:#f7fafc;border:1px solid var(--line);border-radius:10px;margin-top:10px;overflow:hidden}
+.stage{position:relative}
+.stage img{width:100%;display:block}
+.stage svg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.map{padding:0;overflow:hidden}
+.maphead{padding:16px 16px 10px}
+.liftbanks,.twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.liftbanks{padding:16px;background:#f7fafc;border-top:1px solid var(--line)}
+.liftbanks div{font-size:13px;line-height:1.55}
+.controls{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin:12px 0}
+.controls label{display:flex;flex-direction:column;gap:4px;margin:0;font-size:14px;font-weight:650;color:var(--muted)}
+.controls input,.controls select,.field select{font:inherit;font-size:15px;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.compare>div{background:#f7fafc;border:1.5px solid var(--line);border-radius:12px;padding:12px}
+.compare>div:first-child{border-top:3px solid var(--blue)}
+.compare>div:last-child{border-top:3px solid var(--teal)}
+.compare strong{font-size:24px;font-variant-numeric:tabular-nums}
+.compare .small{overflow-wrap:anywhere}
+.small{font-size:13px;color:var(--muted)}
+#choice{font-size:16px;margin:8px 0}
+canvas{width:100%;height:190px;display:block}
+progress{width:100%;height:8px;margin-top:12px;border:0;border-radius:999px;overflow:hidden;appearance:none;background:var(--line)}
+progress::-webkit-progress-bar{background:var(--line);border-radius:999px}
+progress::-webkit-progress-value{background:var(--teal);border-radius:999px}
+progress::-moz-progress-bar{background:var(--teal);border-radius:999px}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+.panel details{font-size:14px;color:var(--muted)}
+.panel details summary{cursor:pointer;color:var(--ink);font-weight:600}
+code{font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:14px;margin-top:12px}
+td,th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--muted);background:#f6fafc}
+.pill{background:#deeff4;display:inline-block;padding:3px 8px;border-radius:999px;font-size:13px}
+#lookupResult{border:1.5px solid var(--line);border-radius:12px;background:#f7fafc}
+#error{min-height:1.2em;margin:8px 0 0}
+@media(max-width:900px){
+ main{grid-template-columns:minmax(0,1fr);padding:16px 12px}
+ .bar{padding:0 12px}
+ aside{position:static;max-height:none;overflow:visible;display:block}
+ .fields{overflow:visible}
+ .strip,.twocol,.liftbanks,.compare{grid-template-columns:1fr 1fr}
+ .strip .metric:nth-child(n+3){grid-column:auto}
+}
+@media(max-width:520px){
+ .strip,.compare{grid-template-columns:1fr}
+ header h1{font-size:20px}
+}
 </style>
-<header><a href="user.html" style="float:right;color:#fff;border:1px solid rgba(255,255,255,.55);border-radius:999px;padding:6px 14px;text-decoration:none;font-size:14px;margin-top:4px">Passenger advisor →</a><h1>HKU A2 Lift Queue Choice Model</h1><p>Entry arrivals · Noisy rational choice · Time-based conditional recommendations</p></header>
-<main><aside><h2>System parameters</h2>
-<label>Random seed<input id="seed" value="HKU-2026"></label><label>Duration (min)<input id="duration" type="number" min="1" max="120" value="40"></label>
-<h3>Entry arrivals (NHPP)</h3>
-<label>Side A baseline (people/min)<input id="rateA" type="number" min="0" max="300" value="120"></label>
-<label>Side B baseline (people/min)<input id="rateB" type="number" min="0" max="300" value="80"></label>
-<label>Class-ending surge (people/min)<input id="shock" type="number" min="0" max="600" value="60"></label>
-<label>First surge (min)<input id="shockStart" type="number" min="0" max="120" value="0"></label>
-<label>Surge duration (min)<input id="shockDuration" type="number" min="0" max="60" value="10"></label>
-<label>Repeat interval (min)<input id="shockEvery" type="number" min="0" max="180" value="60"></label>
-<p class="note">Arrivals enter from either side, then choose a queue. Each entry receives the additional surge rate during class-ending windows. Set the repeat interval to 0 for a single surge. The 60-minute default is retained from the previous version.</p>
-<h3>Choice and walking</h3>
-<label>Choice sensitivity β (1/s)<input id="beta" type="number" min="0" max="2" step="0.01" value="0.05"></label>
-<label>Walking distance<select id="walkModel"><option value="document">PDF: queue lengths</option><option value="geometry">Map: route length</option></select></label>
-<label>Queue spacing ℓ (m/person)<input id="spacing" type="number" min="0.1" max="2" step="0.05" value="0.45"></label>
-<label>Walking speed (m/s)<input id="walkSpeed" type="number" min="0.2" max="3" step="0.1" value="1.3"></label>
-<label>Map scale (m/pixel)<input id="mapScale" type="number" min="0.001" max="1" step="0.001" value="0.025"></label>
-<p class="note">β = 0 gives a 50/50 split. Higher values favor shorter expected delays. Decisions start at the local queue tail: staying adds no walking; switching takes ℓ × (N_left + N_right) / speed. Map mode is an optional comparison. No crowd slowdown is applied.</p>
-<h3 class="blue">Left · Direct · PDF Queue 2</h3>
-<label>Capacity limit (people)<input id="cap1" type="number" min="1" max="100" value="20"></label><label>Mean round trip (s)<input id="cycle1" type="number" min="10" max="600" value="40"></label><label>Cycle standard deviation (s)<input id="std1" type="number" min="0" max="120" value="4"></label>
-<h3 class="teal">Right · Via A1 · PDF Queue 1</h3>
-<label>Capacity limit (people)<input id="cap2" type="number" min="1" max="100" value="20"></label><label>Mean round trip (s)<input id="cycle2" type="number" min="10" max="600" value="200"></label><label>Cycle standard deviation (s)<input id="std2" type="number" min="0" max="120" value="20"></label>
-<p class="note">Four lifts per side. Trip capacity uses discrete normal weights from max(1, C − 4) to C. Cycles follow a truncated normal with a 10-second minimum. Capacities represent available entry-floor places; no separate A1 deduction is applied.</p>
-<button class="primary wide" id="run">Regenerate simulation</button><button class="wide" id="newSeed">Randomize seed</button><p id="error" role="alert"></p></aside>
-<section class="right"><div class="strip"><div><span class="blue">Left queue</span><span id="qLeft" class="number">0</span><span id="selectedLeft" class="small"></span></div><div><span class="teal">Right queue</span><span id="qRight" class="number">0</span><span id="selectedRight" class="small"></span></div><div>Walking between queues<span id="inTransit" class="number">0</span><span class="small">Join only on reaching the destination tail</span></div><div>Boarded / Arrived<span id="totals" class="number">0 / 0</span><span id="average" class="small"></span></div></div>
-<div class="panel"><div class="controls"><button id="play">▶ Play</button><span id="clock">00:00.00</span><input id="seek" type="range" min="0" max="2400" step="0.05" value="0" aria-label="Replay position"><select id="speed" aria-label="Playback speed"><option value="1">1×</option><option value="5">5×</option><option value="20">20×</option><option value="60">60×</option></select></div><p class="small" id="rates"></p><canvas id="timeline" aria-label="Queue lengths over time"></canvas></div>
-<div class="panel map"><img src="assets/corridor_layout.png" alt="Corridor plan: left direct lifts and right lifts via A1"><svg id="people" viewBox="0 0 1536 1024" aria-label="Queues and switching routes"></svg><div class="liftbanks"><div id="liftsLeft"></div><div id="liftsRight"></div></div></div>
-<div class="panel decision"><h2>How do fully informed passengers choose?</h2><label>Entry side<select id="entrySide"><option value="A">Side A · Left queue tail</option><option value="B">Side B · Right queue tail</option></select></label><div class="compare"><div><span class="blue">Left · Direct lifts</span><br><strong id="costLeft"></strong><div id="walkLeft" class="small"></div><div id="formulaLeft" class="small"></div></div><div><span class="teal">Right · Lifts via A1</span><br><strong id="costRight"></strong><div id="walkRight" class="small"></div><div id="formulaRight" class="small"></div></div></div><p id="choice" class="number" style="font-size:20px"></p><p id="flows" class="small"></p>
-<p class="note">PDF equations (5)–(9): position loss ΔN = λ_queue(t) × walking time; expected delay = walking + ceil((N + ΔN + 1) / mean capacity) × (cycle / 4). Destination arrival rates combine both entry rates with their latest choice probabilities, held at the decision time. Real boarding uses independent lift events. The lookup table uses this same cost function.</p></div>
-<div class="panel"><h2>Build a simulation-based lookup table</h2><p>Run independent system trajectories and record paired queue lengths by time window. Given the local queue length, estimate the other queue's distribution and compare conditional expected delays.</p><div class="controls"><button class="primary" id="batchRun">Collect 1,000,000 queue snapshots</button><button id="batchCancel" disabled>Stop</button><button id="batchCsv" disabled>Download table CSV</button><button id="batchJson" disabled>Download full JSON</button></div><progress id="batchProgress" max="1000000" value="0"></progress><p id="batchStatus" role="status">No table yet. Each independent trajectory is sampled every 5 seconds, grouped into 5-minute windows.</p><p class="note">One million means paired snapshots, not complete trajectories. Samples within each trajectory are correlated and are not treated as independent trials for confidence intervals. Both queues evolve freely.</p><hr>
-<h2>Which queue should I choose with only local information?</h2><div class="controls"><label>Entry<select id="lookupSide"><option value="A">Side A · Observe left</option><option value="B">Side B · Observe right</option></select></label><label>Time window<select id="lookupWindow"></select></label><label>People observed<input id="lookupCount" type="number" min="0" max="100000" value="20"></label></div><div id="lookupResult" class="decision" style="padding:12px">Collect snapshots to enable lookup.</div><div class="twocol"><div><h3>Conditional length of the other queue</h3><canvas id="distribution" aria-label="Conditional distribution of the other queue"></canvas></div><div><h3>Expected delay by observed queue length</h3><canvas id="policy" aria-label="Conditional expected delays for both choices"></canvas></div></div><p class="note">Lookup uses P(other queue length | local queue length, time window). Expected delays include switching walks and position loss. Fewer than 30 matches produce no definite recommendation. Missing conditions never use the hidden live queue. Changing parameters requires a new table.</p></div>
-<div class="panel"><details><summary>Model assumptions and correspondence to the PDF</summary><table><tr><th>Layer</th><th>Implementation</th></tr><tr><td>Arrivals</td><td>Baseline plus class-ending surges; exact NHPP events and 20 Hz replay.</td></tr><tr><td>Choice</td><td>True queue lengths and stable Logit, equivalent to independent Gumbel utility noise. Walkers join on arrival.</td></tr><tr><td>Service</td><td>Four independent lifts per side. Batch boarding follows a five-second door-open period, with random capacity and cycles.</td></tr><tr><td>Lookup</td><td>Joint snapshots from independent trajectories; condition on entry, time window and observed local queue length. Average the complete walking-plus-waiting cost over matching snapshots.</td></tr><tr><td>Extensions to PDF</td><td>Retains four lifts, optional map routes and random cycles/capacity. Perceived costs use mean available capacity and cycle / 4; actual services use eight independent lift states. Adjust the right capacity to reflect measured A1 occupancy. No field calibration is assumed.</td></tr><tr><td>Scope</td><td>Delay ends at boarding, excluding the lift ride. No crowd slowdown or Bayesian/QRE equilibrium solver. Widespread adoption of recommendations requires recalibration.</td></tr></table><p class="note">Left = direct = PDF Q2; right = via A1 = PDF Q1. Conditional cost curves need not have a single crossing. Only map mode caps distance at the artwork boundary; PDF walking distance uses the full queue counts. Rates are entered in people/minute and converted internally to people/second.</p></details></div>
-</section></main><script src="api-client.js?v=8"></script><script src="map-geometry.js?v=5"></script><script src="app.js?v=5"></script><script src="batch-ui.js?v=5"></script></html>
+<header><div class="bar"><div><h1 data-i18n="title">HKU A2 Lift Queue Choice Model</h1><p data-i18n="subtitle">How do the two queues build up? Which one do people pick?</p></div><nav class="nav"><select id="lang" class="langpick" aria-label="Language"><option value="en">English</option><option value="zh-Hans">简体中文</option><option value="zh-Hant">繁體中文</option></select><a href="user.html" data-i18n="toUser">Passenger advisor →</a></nav></div></header>
+<main>
+<aside>
+ <h2 data-i18n="paramsTitle">System parameters</h2>
+ <div class="fields">
+  <label><span data-i18n="seed">Random seed</span><input id="seed" value="HKU-2026"></label>
+  <label><span data-i18n="duration">Duration (min)</span><input id="duration" type="number" min="1" max="120" value="40"></label>
+  <details open>
+   <summary data-i18n="sumArrival">Entry arrivals (NHPP)</summary>
+   <label><span data-i18n="rateA">Side A baseline (people/min)</span><input id="rateA" type="number" min="0" max="300" value="120"></label>
+   <label><span data-i18n="rateB">Side B baseline (people/min)</span><input id="rateB" type="number" min="0" max="300" value="80"></label>
+   <label><span data-i18n="shock">Class-ending surge (people/min)</span><input id="shock" type="number" min="0" max="600" value="60"></label>
+   <label><span data-i18n="shockStart">First surge (min)</span><input id="shockStart" type="number" min="0" max="120" value="0"></label>
+   <label><span data-i18n="shockDur">Surge duration (min)</span><input id="shockDuration" type="number" min="0" max="60" value="10"></label>
+   <label><span data-i18n="shockEvery">Repeat interval (min)</span><input id="shockEvery" type="number" min="0" max="180" value="60"></label>
+   <p class="note" data-i18n="arrivalNote">Arrivals enter from either side, then choose a queue. Each entry receives the additional surge rate during class-ending windows. Set the repeat interval to 0 for a single surge. The 60-minute default is retained from the previous version.</p>
+  </details>
+  <details open>
+   <summary data-i18n="choiceSum">Choice and walking</summary>
+   <label><span data-i18n="beta">Choice sensitivity β (1/s)</span><input id="beta" type="number" min="0" max="2" step="0.01" value="0.05"></label>
+   <label><span data-i18n="walkLabel">Walking distance</span><select id="walkModel"><option value="document" data-i18n="walkDocument">PDF: queue lengths</option><option value="geometry" data-i18n="walkGeometry">Map: route length</option></select></label>
+   <label><span data-i18n="spacing">Queue spacing ℓ (m/person)</span><input id="spacing" type="number" min="0.1" max="2" step="0.05" value="0.45"></label>
+   <label><span data-i18n="speed">Walking speed (m/s)</span><input id="walkSpeed" type="number" min="0.2" max="3" step="0.1" value="1.3"></label>
+   <label><span data-i18n="scale">Map scale (m/pixel)</span><input id="mapScale" type="number" min="0.001" max="1" step="0.001" value="0.025"></label>
+   <p class="note" data-i18n="choiceNote">β = 0 gives a 50/50 split. Higher values favor shorter expected delays. Decisions start at the local queue tail: staying adds no walking; switching takes ℓ × (N_left + N_right) / speed. Map mode is an optional comparison. No crowd slowdown is applied.</p>
+  </details>
+  <details open>
+   <summary data-i18n="liftsSum">Lifts</summary>
+   <h3 class="blue" data-i18n="leftHead">Left · Direct · PDF Queue 2</h3>
+   <label><span data-i18n="cap">Capacity limit (people)</span><input id="cap1" type="number" min="1" max="100" value="20"></label>
+   <label><span data-i18n="cycle">Mean round trip (s)</span><input id="cycle1" type="number" min="10" max="600" value="40"></label>
+   <label><span data-i18n="std">Cycle standard deviation (s)</span><input id="std1" type="number" min="0" max="120" value="4"></label>
+   <h3 class="teal" data-i18n="rightHead">Right · Via A1 · PDF Queue 1</h3>
+   <label><span data-i18n="cap">Capacity limit (people)</span><input id="cap2" type="number" min="1" max="100" value="20"></label>
+   <label><span data-i18n="cycle">Mean round trip (s)</span><input id="cycle2" type="number" min="10" max="600" value="200"></label>
+   <label><span data-i18n="std">Cycle standard deviation (s)</span><input id="std2" type="number" min="0" max="120" value="20"></label>
+   <p class="note" data-i18n="liftNote">Four lifts per side. Trip capacity uses discrete normal weights from max(1, C − 4) to C. Cycles follow a truncated normal with a 10-second minimum. Capacities represent available entry-floor places; no separate A1 deduction is applied.</p>
+  </details>
+ </div>
+ <div class="actions">
+  <button class="primary wide" id="run" data-i18n="run">Regenerate simulation</button>
+  <button class="wide" id="newSeed" data-i18n="newSeed">Randomize seed</button>
+  <p id="error" role="alert"></p>
+ </div>
+</aside>
+<section class="right">
+ <div class="strip">
+  <div class="metric left"><span class="kicker blue" data-i18n="kLeft">Left queue</span><span id="qLeft" class="number">0</span><span id="selectedLeft" class="small"></span></div>
+  <div class="metric right"><span class="kicker teal" data-i18n="kRight">Right queue</span><span id="qRight" class="number">0</span><span id="selectedRight" class="small"></span></div>
+  <div class="metric"><span class="kicker" data-i18n="kWalk">Walking between queues</span><span id="inTransit" class="number">0</span><span class="small" data-i18n="kWalkNote">Join only on reaching the destination tail</span></div>
+  <div class="metric"><span class="kicker" data-i18n="kBoard">Boarded / Arrived</span><span id="totals" class="number">0 / 0</span><span id="average" class="small"></span></div>
+ </div>
+ <div class="panel">
+  <h2 data-i18n="replay">Replay</h2>
+  <div class="toolbar">
+   <button id="play" data-i18n="play">▶ Play</button>
+   <span id="clock">00:00.00</span>
+   <input id="seek" type="range" min="0" max="2400" step="0.05" value="0" data-i18n-aria="seekAria" aria-label="Replay position">
+   <select id="speed" data-i18n-aria="speedAria" aria-label="Playback speed"><option value="1">1×</option><option value="5">5×</option><option value="20">20×</option><option value="60">60×</option></select>
+  </div>
+  <p class="small" id="rates"></p>
+  <div class="plot"><canvas id="timeline" data-i18n-aria="timelineAria" aria-label="Queue lengths over time"></canvas></div>
+ </div>
+ <div class="panel map">
+  <div class="maphead"><h2 data-i18n="corridor">Corridor</h2></div>
+  <div class="stage"><img src="assets/corridor_layout.png" data-i18n-alt="mapAlt" alt="Corridor plan: left direct lifts and right lifts via A1"><svg id="people" viewBox="0 0 1536 1024" data-i18n-aria="peopleAria" aria-label="Queues and switching routes"></svg></div>
+  <div class="liftbanks"><div id="liftsLeft"></div><div id="liftsRight"></div></div>
+ </div>
+ <div class="panel decision">
+  <h2 data-i18n="decisionTitle">How do fully informed passengers choose?</h2>
+  <label class="field"><span data-i18n="entrySide">Entry side</span><select id="entrySide"><option value="A" data-i18n="sideA">Side A · Left queue tail</option><option value="B" data-i18n="sideB">Side B · Right queue tail</option></select></label>
+  <div class="compare"><div><span class="blue" data-i18n="cmpLeft">Left · Direct lifts</span><br><strong id="costLeft"></strong><div id="walkLeft" class="small"></div><div id="formulaLeft" class="small"></div></div><div><span class="teal" data-i18n="cmpRight">Right · Lifts via A1</span><br><strong id="costRight"></strong><div id="walkRight" class="small"></div><div id="formulaRight" class="small"></div></div></div>
+  <p id="choice" class="number">—</p>
+  <p id="flows" class="small"></p>
+  <p class="note" data-i18n="decisionNote">PDF equations (5)–(9): position loss ΔN = λ_queue(t) × walking time; expected delay = walking + ceil((N + ΔN + 1) / mean capacity) × (cycle / 4). Destination arrival rates combine both entry rates with their latest choice probabilities, held at the decision time. Real boarding uses independent lift events. The lookup table uses this same cost function.</p>
+ </div>
+ <div class="panel">
+  <h2 data-i18n="batchTitle">Build a simulation-based lookup table</h2>
+  <p data-i18n="batchIntro">Run independent system trajectories and record paired queue lengths by time window. Given the local queue length, estimate the other queue's distribution and compare conditional expected delays.</p>
+  <div class="controls"><button class="primary" id="batchRun" data-i18n="batchRun">Collect 1,000,000 queue snapshots</button><button id="batchCancel" data-i18n="batchStop" disabled>Stop</button><button id="batchCsv" data-i18n="batchCsv" disabled>Download table CSV</button><button id="batchJson" data-i18n="batchJson" disabled>Download full JSON</button></div>
+  <progress id="batchProgress" max="1000000" value="0"></progress>
+  <p id="batchStatus" role="status" data-i18n="batchIdle">No table yet. Each independent trajectory is sampled every 5 seconds, grouped into 5-minute windows.</p>
+  <p class="note" data-i18n="batchNote">One million means paired snapshots, not complete trajectories. Samples within each trajectory are correlated and are not treated as independent trials for confidence intervals. Both queues evolve freely.</p>
+  <hr>
+  <h2 data-i18n="localTitle">Which queue should I choose with only local information?</h2>
+  <div class="controls"><label><span data-i18n="lookupEntry">Entry</span><select id="lookupSide"><option value="A" data-i18n="lookupA">Side A · Observe left</option><option value="B" data-i18n="lookupB">Side B · Observe right</option></select></label><label><span data-i18n="lookupWindow">Time window</span><select id="lookupWindow"></select></label><label><span data-i18n="lookupPeople">People observed</span><input id="lookupCount" type="number" min="0" max="100000" value="20"></label></div>
+  <div id="lookupResult" class="decision" style="padding:12px">Collect snapshots to enable lookup.</div>
+  <div class="twocol"><div><h3 data-i18n="distTitle">Conditional length of the other queue</h3><div class="plot"><canvas id="distribution" data-i18n-aria="distAria" aria-label="Conditional distribution of the other queue"></canvas></div></div><div><h3 data-i18n="delayTitle">Expected delay by observed queue length</h3><div class="plot"><canvas id="policy" data-i18n-aria="policyAria" aria-label="Conditional expected delays for both choices"></canvas></div></div></div>
+  <p class="note" data-i18n="lookupNote">Lookup uses P(other queue length | local queue length, time window). Expected delays include switching walks and position loss. Fewer than 30 matches produce no definite recommendation. Missing conditions never use the hidden live queue. Changing parameters requires a new table.</p>
+ </div>
+ <div class="panel"><details><summary data-i18n="assumeSum">Model assumptions and correspondence to the PDF</summary><table><tr><th data-i18n="thLayer">Layer</th><th data-i18n="thImpl">Implementation</th></tr><tr><td data-i18n="rowArrivals">Arrivals</td><td data-i18n="rowArrivalsBody">Baseline plus class-ending surges; exact NHPP events and 20 Hz replay.</td></tr><tr><td data-i18n="rowChoice">Choice</td><td data-i18n="rowChoiceBody">True queue lengths and stable Logit, equivalent to independent Gumbel utility noise. Walkers join on arrival.</td></tr><tr><td data-i18n="rowService">Service</td><td data-i18n="rowServiceBody">Four independent lifts per side. Batch boarding follows a five-second door-open period, with random capacity and cycles.</td></tr><tr><td data-i18n="rowLookup">Lookup</td><td data-i18n="rowLookupBody">Joint snapshots from independent trajectories; condition on entry, time window and observed local queue length. Average the complete walking-plus-waiting cost over matching snapshots.</td></tr><tr><td data-i18n="rowExt">Extensions to PDF</td><td data-i18n="rowExtBody">Retains four lifts, optional map routes and random cycles/capacity. Perceived costs use mean available capacity and cycle / 4; actual services use eight independent lift states. Adjust the right capacity to reflect measured A1 occupancy. No field calibration is assumed.</td></tr><tr><td data-i18n="rowScope">Scope</td><td data-i18n="rowScopeBody">Delay ends at boarding, excluding the lift ride. No crowd slowdown or Bayesian/QRE equilibrium solver. Widespread adoption of recommendations requires recalibration.</td></tr></table><p class="note" data-i18n="assumeNote">Left = direct = PDF Q2; right = via A1 = PDF Q1. Conditional cost curves need not have a single crossing. Only map mode caps distance at the artwork boundary; PDF walking distance uses the full queue counts. Rates are entered in people/minute and converted internally to people/second.</p></details></div>
+</section>
+</main>
+<script src="lang.js?v=1"></script><script src="academic-i18n.js?v=2"></script><script src="api-client.js?v=9"></script><script src="map-geometry.js?v=5"></script><script src="app.js?v=6"></script><script src="batch-ui.js?v=7"></script>
+</html>

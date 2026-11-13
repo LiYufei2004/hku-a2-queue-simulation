@@ -15,7 +15,7 @@ const isNode=typeof module!=='undefined'&&module.exports;
 const M=isNode?require('./model-core.js'):root.QueueModel;
 const TP=isNode?require('./time-profile.js'):root.TimeProfile;
 
-const DEFAULTS={runs:100,branches:80,window:180,sample:5,minMatches:30};
+const DEFAULTS={runs:70,branches:80,window:180,sample:5,minMatches:30};
 // Choice and walking settings follow the academic model; lifts come from the field-calibrated table.
 const BASE={walkModel:'document',spacing:.45,speed:1.3,scale:.025,beta:.05,...TP.LIFTS,sample:5,window:300};
 
@@ -23,7 +23,7 @@ function validate(input){
  if(!input||typeof input!=='object')throw Error('Advisor input is required.');
  const {queue,ahead,speed}=input;
  if(queue!==0&&queue!==1)throw Error('Invalid queue: use 0 (left, direct) or 1 (right, via A1).');
- if(!Number.isInteger(ahead)||ahead<0||ahead>400)throw Error('Invalid number of people ahead.');
+ if(!Number.isInteger(ahead)||ahead<0||ahead>600)throw Error('Invalid number of people ahead.');
  if(!Number.isFinite(speed)||speed<.3||speed>3)throw Error('Invalid walking speed.');
  TP.normalizeNow(input.now);
  for(const [key,min,max] of [['runs',10,1000],['branches',10,1000]])if(input[key]!==undefined&&(!Number.isInteger(input[key])||input[key]<min||input[key]>max))throw Error(`Invalid ${key}.`);
@@ -50,13 +50,16 @@ function advise(input){
  const band=Math.max(2,Math.round(ahead*.15)),distance=x=>x.own<ahead?ahead-x.own:Math.max(0,x.own-ahead-band);
  const matches=records.filter(x=>distance(x)===0);
  const lowConfidence=matches.length<opt.minMatches;
- // Too few exact matches: fall back to the nearest snapshots (flagged as low confidence).
- const used=lowConfidence?records.map((x,i)=>({x,i,d:distance(x)})).sort((a,b)=>a.d-b.d||a.i-b.i).slice(0,Math.max(opt.minMatches,matches.length)).map(o=>o.x):matches;
- const hist={};for(const x of used)hist[x.other]=(hist[x.other]||0)+1;
- const others=used.map(x=>x.other).sort((a,b)=>a-b);
  // The user's queue can be longer than this time profile usually produces: their position
  // is still honoured (insertTagged pads the queue), and the result is flagged as extrapolated.
  const ownSorted=records.map(x=>x.own).sort((a,b)=>a-b),ownTypicalMax=Math.round(quantile(ownSorted,.95)),extrapolated=lowConfidence&&ahead>ownTypicalMax;
+ // Too few exact matches: fall back to the nearest snapshots (flagged as low confidence).
+ // Beyond the simulated range, the "nearest" snapshots are the moments with the longest queues,
+ // which at quiet times are just before a bunch of lifts arrives; that would bias waits down.
+ // So an extrapolated estimate uses every snapshot in the window instead.
+ const used=extrapolated?records:lowConfidence?records.map((x,i)=>({x,i,d:distance(x)})).sort((a,b)=>a.d-b.d||a.i-b.i).slice(0,Math.max(opt.minMatches,matches.length)).map(o=>o.x):matches;
+ const hist={};for(const x of used)hist[x.other]=(hist[x.other]||0)+1;
+ const others=used.map(x=>x.other).sort((a,b)=>a-b);
 
  // Pass 2: branch from an evenly spread subset of the used states (deterministic).
  const stride=Math.max(1,used.length/opt.branches),chosen=[];for(let j=0;j<used.length&&chosen.length<opt.branches;j+=stride)chosen.push(used[Math.floor(j)]);
@@ -65,7 +68,7 @@ function advise(input){
  for(const [r,ks] of byRun){
   const e=new M.Engine(p,p.seed+'-adv-'+r);
   for(const k of [...new Set(ks)].sort((a,b)=>a-b)){
-   const t0=ticks[k];e.advance(t0);const repeat=ks.filter(v=>v===k).length,limit=t0+3600;
+   const t0=ticks[k];e.advance(t0);const repeat=ks.filter(v=>v===k).length,limit=t0+7200;
    for(let n=0;n<repeat;n++){
     const a=e.clone().insertTagged(queue,ahead),resA=boardingWait(a,t0,limit);
     const b=e.clone(),q=b.q(),walk=p.spacing*(ahead+q[other])/input.speed;b.joinTagged(other,walk);const resB=boardingWait(b,t0,limit);
