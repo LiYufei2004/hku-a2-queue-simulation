@@ -94,7 +94,7 @@ details{font-size:14px;color:var(--muted)}details summary{cursor:pointer;color:v
  <p class="small" data-i18n="whereHelp">Tap your spot on the map or pick the nearest landmark, then fine-tune the number of people ahead of you.</p>
  <div class="mapwrap" id="mapwrap"><div class="map"><img src="assets/campus-map.svg?v=1" data-i18n-alt="mapAlt" alt="Map of University Street at HKU. The A2 lift tower stands in front of Haking Wong Building. The left (direct) queue runs west past Haking Wong and the footbridge towards the Library; the right (via A1) queue runs east past Simon K.Y. Lee Hall, Composite Building and Chow Yei Ching Building towards Jockey Club Tower."><svg id="overlay" viewBox="0 0 2400 1000" role="img" data-i18n-aria="mapAria" aria-label="Queue position picker"></svg></div></div><p class="maphint" data-i18n="mapHint">Swipe the map sideways to see the whole street.</p>
  <div class="landmarks" id="landmarks"></div>
- <div class="ahead"><span data-i18n="ahead">People ahead of you</span><input type="range" id="ahead" min="0" max="400" value="40" data-i18n-aria="ahead" aria-label="People ahead of you"><output id="aheadOut">40</output></div>
+ <div class="ahead"><span data-i18n="ahead">People ahead of you</span><input type="range" id="ahead" min="0" max="500" value="40" data-i18n-aria="ahead" aria-label="People ahead of you"><output id="aheadOut">40</output></div>
  <p class="small" id="aheadNote"></p>
 </section>
 <button class="go" id="go" type="button" data-i18n="go">Should I switch?</button>
@@ -102,4 +102,4 @@ details{font-size:14px;color:var(--muted)}details summary{cursor:pointer;color:v
 <section class="card" id="result" hidden aria-live="polite"></section>
 <section class="card"><details><summary data-i18n="howTitle">How is this estimated?</summary><div id="howText"></div></details></section>
 </main>
-<script src="lang.js?v=1"></script><script src="api-client.js?v=7"></script><script src="campus-map.js?v=1"></script><script src="user.js?v=6"></script></html>
+<script src="lang.js?v=1"></script><script src="api-client.js?v=9"></script><script src="campus-map.js?v=2"></script><script src="user.js?v=7"></script></html>

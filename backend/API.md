@@ -10,7 +10,9 @@ The mathematical model is version 4; API version 1 is an independent protocol ve
 - `backend/model-core.js`: NHPP arrivals, walking costs, Logit choice, lift events,
   queue conservation, replay and conditional sample aggregation.
 - `backend/time-profile.js`: Hong Kong time-of-day arrival profile for the passenger advisor
-  (editable, illustrative rates; class-end peaks at :50, lunch and dinner uplifts).
+  and the advisor's lift table (`LIFTS`), calibrated to the team's field measurements:
+  direct 30 people/min (15 per trip, 120 s), via A1 about 4.8 people/min (about 4 board at A2, 200 s),
+  ~25/min lecture-time arrivals and a 55/min extreme peak.
 - `backend/advisor.js`: stay/switch estimates built on the same engine (see `advise`).
 - `backend/simulation-service.js`: public operations, parameter validation and
   plain-data results; also usable directly from Node.js without the frontend.
@@ -101,9 +103,9 @@ const advice = await client.advise({now: Date.now(), queue: 1, ahead: 30, speed:
 
 `now` is epoch milliseconds (converted to Hong Kong time) or `{weekday: 0=Sun..6, seconds}`
 since Hong Kong midnight. `queue` is 0 (left/direct, Side A) or 1 (right/via A1, Side B);
-`ahead` is the number of people in front of the user (0-400); `speed` is m/s (0.3-3).
+`ahead` is the number of people in front of the user (0-600); `speed` is m/s (0.3-3).
 
-The advisor simulates 100 seeded trajectories from 15 minutes before `now` with profile
+The advisor simulates 70 seeded trajectories from 60 minutes before `now` with profile
 arrivals (rate `[0,0]` plus per-entry `addBy` pulses), records paired queue lengths every
 5 s within +-3 min of `now`, and keeps snapshots whose own queue holds the user's position
 (`ahead` to `ahead + max(2, 15%)`). Those give `P(other queue | own queue, time)`. From up to
