@@ -1,0 +1,31 @@
+Li Yufei / Group02 — final review package (14 Nov 2026)
+
+审核入口
+output/Li_Final_Presentation.pptx：4页Li部分，可编辑文字、图表，含英文讲稿。
+output/Li_Final_Presentation.pdf：同版预览。
+output/Li_Final_Report_Sections.pdf：3页英文report，章节7 Academic Simulation Website、9 Experiments and Results。
+output/Overleaf_Li_Sections.zip：可上传Overleaf的独立编译包；main.tex为入口。
+report/：对应LaTeX源文件及figures。slides/speaker_notes.txt：逐页英文讲稿及证据来源。
+
+已核对的分工
+截图第7节为Li；后续消息将第9节也分给Li。这里的7、9是report章节编号，不是Canva页码。第8、10、11节和团队贡献表未代其他同学填写。
+Canva当前下载的是11页占位模板（包含Borcelle及Lorem ipsum），没有可辨认的Li成稿。保留蓝色边框、Chewy/Codec Pro字体，制作可插入团队演示的4页模块；原团队Canva未修改。
+为避免模板原有边界外装饰物影响导出，原装饰背景合并为整页图像，正文和结果图表保持可编辑。
+
+最重要的内容审核
+1. 本地网站backend是JavaScript/Web Worker，不是截图中的SimPy。没有拿到团队SimPy代码或同参数结果，不声称二者一致。
+2. 默认参数仍为假设输入，非实测校准：A120/B80人每分，前10分钟各加60；四梯每边，周期40/200秒，容量上限20、均值18。近似总服务能力129.6人每分，因此默认属于过载压力场景。
+3. 这次新增4组场景×30条独立轨迹，共120次40分钟仿真；原始数据在analysis/runs.csv，参数与区间在summary.json。低需求对照为A40/B30，无/有冲击。
+4. 主结果是40分钟仍未登梯人数（排队+步行），不是现实改善百分比。已登梯者平均等待存在截尾偏差，报告已解释。高负载时队长推步行距离可能失真，不能直接当车站预测。
+5. 另重新收集1,000,000配对快照，2,084独立种子轨迹、7,400条件单元；不是100万独立旅客/独立完整实验。队内相关性与稀疏样本限制已说明。
+6. Overleaf verified: COMP1110_plan/main.tex is the final-report draft; plan.tex is the old plan. The source is saved locally and the online file is unchanged. Report numbering follows the team allocation and needs alignment when merging. Latest Moodle formatting rules have not been newly verified.
+   Model alignment: team Q2=direct and Q1=via A1; website Side A/left=Q2, Side B/right=Q1. Team equations use single-lift batches with C1<C2. These experiments use four lifts per bank, equal mean capacity 18, and cycle/4 perceived service time, without a separate A1 capacity deduction. They are not a verbatim implementation of all team assumptions. The team's tool-use declaration should reflect actual usage.
+7. 若团队已有实测参数、SimPy实验或最终模型修订，先对齐，再替换本稿场景结果。不要把压力实验改称实测结论。
+
+复现
+node analysis/run_experiments.cjs
+Use the frozen sources/code_snapshot by default; COMP1110_MODEL_DIR can select another checkout.
+在report文件夹执行 tectonic -X compile main.tex --outdir ../output。
+分析文件、图表输入与源文件SHA-256记录在sources/provenance.json。
+
+Online Canva/Overleaf unchanged; no Moodle submission or messages. Git destination: deliverables/li-final/.

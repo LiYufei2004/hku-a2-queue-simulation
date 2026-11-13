@@ -1,0 +1,296 @@
+{
+  "created": "2026-11-13T17:07:36.658Z",
+  "base": {
+    "seed": "li-final-20261114",
+    "duration": 2400,
+    "rate": [
+      2,
+      1.3333333333333333
+    ],
+    "pulses": [],
+    "walkModel": "document",
+    "spacing": 0.45,
+    "speed": 1.3,
+    "scale": 0.025,
+    "beta": 0.05,
+    "cap": [
+      20,
+      20
+    ],
+    "cycle": [
+      40,
+      200
+    ],
+    "std": [
+      4,
+      20
+    ],
+    "lifts": 4,
+    "sample": 5,
+    "window": 300
+  },
+  "designs": [
+    {
+      "id": "low_no_surge",
+      "label": "70/min, no surge",
+      "rate": [
+        0.6666666666666666,
+        0.5
+      ],
+      "surge": false
+    },
+    {
+      "id": "low_surge",
+      "label": "70/min + surge",
+      "rate": [
+        0.6666666666666666,
+        0.5
+      ],
+      "surge": true
+    },
+    {
+      "id": "default_no_surge",
+      "label": "200/min, no surge",
+      "rate": [
+        2,
+        1.3333333333333333
+      ],
+      "surge": false
+    },
+    {
+      "id": "default_surge",
+      "label": "200/min + surge",
+      "rate": [
+        2,
+        1.3333333333333333
+      ],
+      "surge": true
+    }
+  ],
+  "nominalCapacityPeoplePerMinute": [
+    108,
+    21.6
+  ],
+  "summary": [
+    {
+      "scenario": "low_no_surge",
+      "label": "70/min, no surge",
+      "replications": 30,
+      "arrivals": {
+        "mean": 2805.7,
+        "sd": 60.97548970551681,
+        "ci95HalfWidth": 22.768622046393
+      },
+      "boarded": {
+        "mean": 2789.3,
+        "sd": 61.38917685132094,
+        "ci95HalfWidth": 22.92309536532418
+      },
+      "unboarded": {
+        "mean": 16.4,
+        "sd": 9.55780958891372,
+        "ci95HalfWidth": 3.568944754234227
+      },
+      "queued": {
+        "mean": 14.1,
+        "sd": 8.511047587370356,
+        "ci95HalfWidth": 3.178077399158104
+      },
+      "walking": {
+        "mean": 2.3,
+        "sd": 1.8032537641527424,
+        "ci95HalfWidth": 0.6733460216230878
+      },
+      "peakUnboarded": {
+        "mean": 50.56666666666667,
+        "sd": 6.04969838708614,
+        "ci95HalfWidth": 2.2589945031269703
+      },
+      "meanBoardedSeconds": {
+        "mean": 14.260152707702247,
+        "sd": 0.8562044636408097,
+        "ci95HalfWidth": 0.3197120010224115
+      },
+      "boardingFraction": {
+        "mean": 0.9941537726761188,
+        "sd": 0.0033788463634410707,
+        "ci95HalfWidth": 0.0012616819671898217
+      },
+      "leftChoiceFraction": {
+        "mean": 0.8728241808156982,
+        "sd": 0.008986586049613426,
+        "ci95HalfWidth": 0.003355646379212655
+      },
+      "plannedWalkingSeconds": {
+        "mean": 1.9663008163866413,
+        "sd": 0.14904223365341057,
+        "ci95HalfWidth": 0.05565328467870709
+      }
+    },
+    {
+      "scenario": "low_surge",
+      "label": "70/min + surge",
+      "replications": 30,
+      "arrivals": {
+        "mean": 3999.766666666667,
+        "sd": 54.492443850332215,
+        "ci95HalfWidth": 20.347812939339978
+      },
+      "boarded": {
+        "mean": 3984.7,
+        "sd": 53.98029653302308,
+        "ci95HalfWidth": 20.15657398814496
+      },
+      "unboarded": {
+        "mean": 15.066666666666666,
+        "sd": 9.992871022102097,
+        "ci95HalfWidth": 3.7313993632430003
+      },
+      "queued": {
+        "mean": 13.266666666666667,
+        "sd": 9.42459487223441,
+        "ci95HalfWidth": 3.519201561522908
+      },
+      "walking": {
+        "mean": 1.8,
+        "sd": 1.8643663987975962,
+        "ci95HalfWidth": 0.6961658544314513
+      },
+      "peakUnboarded": {
+        "mean": 637.8666666666667,
+        "sd": 40.63609176610109,
+        "ci95HalfWidth": 15.173766038342901
+      },
+      "meanBoardedSeconds": {
+        "mean": 102.94937450207073,
+        "sd": 6.919127594629103,
+        "ci95HalfWidth": 2.5836447046791795
+      },
+      "boardingFraction": {
+        "mean": 0.9962371654226487,
+        "sd": 0.002502777399309882,
+        "ci95HalfWidth": 0.0009345524397811497
+      },
+      "leftChoiceFraction": {
+        "mean": 0.8477289173292532,
+        "sd": 0.003441368096426654,
+        "ci95HalfWidth": 0.001285027965965875
+      },
+      "plannedWalkingSeconds": {
+        "mean": 18.10643088465968,
+        "sd": 1.1592895928416642,
+        "ci95HalfWidth": 0.43288584821878895
+      }
+    },
+    {
+      "scenario": "default_no_surge",
+      "label": "200/min, no surge",
+      "replications": 30,
+      "arrivals": {
+        "mean": 7985.2,
+        "sd": 85.20093896196214,
+        "ci95HalfWidth": 31.814553463884696
+      },
+      "boarded": {
+        "mean": 5168.733333333334,
+        "sd": 23.534176664255067,
+        "ci95HalfWidth": 8.78780598941192
+      },
+      "unboarded": {
+        "mean": 2816.4666666666667,
+        "sd": 90.30130916427296,
+        "ci95HalfWidth": 33.71906299704214
+      },
+      "queued": {
+        "mean": 2453.8333333333335,
+        "sd": 82.45796560644715,
+        "ci95HalfWidth": 30.790310380037894
+      },
+      "walking": {
+        "mean": 362.6333333333333,
+        "sd": 31.55671777580186,
+        "ci95HalfWidth": 11.78347207266327
+      },
+      "peakUnboarded": {
+        "mean": 2823.0666666666666,
+        "sd": 91.75038601190369,
+        "ci95HalfWidth": 34.26015718454642
+      },
+      "meanBoardedSeconds": {
+        "mean": 402.56968758242516,
+        "sd": 11.5121802403985,
+        "ci95HalfWidth": 4.298718748951218
+      },
+      "boardingFraction": {
+        "mean": 0.6473629452693082,
+        "sd": 0.007742281440827279,
+        "ci95HalfWidth": 0.0028910154023256687
+      },
+      "leftChoiceFraction": {
+        "mean": 0.772432191605465,
+        "sd": 0.002321392751035082,
+        "ci95HalfWidth": 0.0008668222990060245
+      },
+      "plannedWalkingSeconds": {
+        "mean": 74.50333488913822,
+        "sd": 4.175256726335859,
+        "ci95HalfWidth": 1.5590664840531856
+      }
+    },
+    {
+      "scenario": "default_surge",
+      "label": "200/min + surge",
+      "replications": 30,
+      "arrivals": {
+        "mean": 9205.266666666666,
+        "sd": 102.05641892442712,
+        "ci95HalfWidth": 38.10849311946393
+      },
+      "boarded": {
+        "mean": 5176.766666666666,
+        "sd": 37.73746271219124,
+        "ci95HalfWidth": 14.091400161497868
+      },
+      "unboarded": {
+        "mean": 4028.5,
+        "sd": 111.76784745237751,
+        "ci95HalfWidth": 41.73480012825299
+      },
+      "queued": {
+        "mean": 3495.1666666666665,
+        "sd": 111.09178663371684,
+        "ci95HalfWidth": 41.482354869759774
+      },
+      "walking": {
+        "mean": 533.3333333333334,
+        "sd": 49.43217808153973,
+        "ci95HalfWidth": 18.458278647768523
+      },
+      "peakUnboarded": {
+        "mean": 4033.9,
+        "sd": 110.73526990078636,
+        "ci95HalfWidth": 41.34922933383522
+      },
+      "meanBoardedSeconds": {
+        "mean": 609.1630514135522,
+        "sd": 10.817118321678539,
+        "ci95HalfWidth": 4.039178363091165
+      },
+      "boardingFraction": {
+        "mean": 0.562440295958926,
+        "sd": 0.00770693923467904,
+        "ci95HalfWidth": 0.002877818405664202
+      },
+      "leftChoiceFraction": {
+        "mean": 0.7591501827217437,
+        "sd": 0.002172184339413382,
+        "ci95HalfWidth": 0.0008111069624541681
+      },
+      "plannedWalkingSeconds": {
+        "mean": 122.86085962955772,
+        "sd": 6.190369820736254,
+        "ci95HalfWidth": 2.3115220797150746
+      }
+    }
+  ]
+}

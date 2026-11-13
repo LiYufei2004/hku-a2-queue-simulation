@@ -1,0 +1,41 @@
+{
+  "review_date": "2026-11-14",
+  "scope": "Li report sections 7 and 9; four-slide presentation module",
+  "canva_url": "https://www.canva.com/design/DAHamobGsvQ/bjAmj5WC27vqPEVtifSV9Q/edit",
+  "overleaf_status": "Verified COMP1110_plan/main.tex final report draft; original retained locally; online unchanged",
+  "current_final_guidelines_status": "Not newly verified",
+  "sources": {
+    "sources/code_snapshot/README.md": "ca0e287d977cf9a87154388a291eb7888b165b4686d4c582ac46830521c5f4c2",
+    "sources/code_snapshot/frontend/api-client.js": "8c9b75d07c5eb9ec96692d703a25d95a0450489e463142e60137c3a9b8b7fa85",
+    "sources/code_snapshot/tests/api.test.js": "4fcea97a67bf17c479e0d24d370d2ab3c1b095daef23c691a189eca26f74ab40",
+    "sources/code_snapshot/tests/model.test.js": "e7e15deeb52acc5def7f173fe32fa15afc16e2e1b60ee085dbe3cdc0d62df4b3",
+    "sources/code_snapshot/backend/simulation-service.js": "7f10aa5cd295a1d050aa8bf66827fd5f93114b08e86ce09d75efe7f1a9f6c18d",
+    "sources/code_snapshot/backend/API.md": "374db4fd3991553d6cf6f9caec9811731b91903c297ea01ce3c67e8975c1fe16",
+    "sources/code_snapshot/backend/model-core.js": "c2a54bc8cef8263a72b48adf4de9cc5e126103061eff25360b1eb117f0a8260b",
+    "sources/code_snapshot/backend/worker.js": "61cd274631ae31b5b488a74f49b6d67526e77cb4c7427acf58520eff928a36a8",
+    "analysis/summary.json": "1fe58957c017dab845db230ed50ab8b3566bcde698289b4fcc0e0c57182c7304",
+    "analysis/run_experiments.cjs": "819e159d7e81f5871d8b02a5984f3f24937c6c27c97752b31d14e3bd6b6075d4",
+    "analysis/conditional-cells.json": "6b9fca960e5d87057fc369d2619a490c0568c3de1311dfa524dfd5588c05b44c",
+    "analysis/runs.csv": "61da447a1ffcc87140387677a34fcb1aed5bddbae851ed911b2e7a88a21a1220",
+    "analysis/make_figures.py": "fb7bcbf894268bf9760ce054b58b7e2b8987bc09ad9c04c06d0d4e482c406b95",
+    "analysis/conditional-summary.json": "868bb3a8c0117a4ccd03c24a6ba128c8c09a5fadac65a6cf6ee42955eb1ae258",
+    "analysis/traces.json": "96ffc8ada48d628ad917d89facaa1a1baf63308c6dbfa55eb22871477147a5ed",
+    "analysis/runs.json": "93b0f3b910877ef3a39fb6f71c78e22feebfa5e0f0c961283db06d48c0aa2451",
+    "report/section09_experiments.tex": "b5174c37edd2cbed68131fb032aeff5dd3eab0de490187791295b83b5e16a3bd",
+    "report/main.tex": "2bd0ee59ab166137d2c4fc294bcc2498663255e2dddc4529246052447b696fae",
+    "report/section07_website.tex": "5442bfd18302c645f966b01993f66d62ddaa183c8ab4d6570a04d5d81d1ff343",
+    "report/figures/website_overview.png": "f49c45d0a5a7a28f108a363d05e6f02790925ff0414e482b0fd8b20578cbdbb9",
+    "report/figures/backlog_traces.pdf": "c3a9052ab86cb7eebb9f63ce58f83ca60bdd3dc2f0b7c4c2a195f9163b80bb0e"
+  },
+  "checks": {
+    "model_api_tests": "passed",
+    "conservation_trajectories": 120,
+    "paired_snapshots": 1000000,
+    "conditional_histogram_count_total": 2000000,
+    "replication_unit": "independent seeded trajectory",
+    "chart_provenance": "analysis/summary.json; runs.csv",
+    "field_calibration": false,
+    "simpy_equivalence_checked": false
+  },
+  "model_alignment": "Q2 direct / Q1 via A1. Experiments use four lifts per bank and equal mean capacities, unlike the single-lift and lower A1 capacity team equations."
+}
