@@ -39,7 +39,7 @@ function advise(input){
  const opt={...DEFAULTS,...input},queue=input.queue,other=1-queue,ahead=input.ahead;
  const frag=TP.paramsAround(input.now);
  const minute=Math.floor(frag.clock.seconds/60);
- const p={...BASE,seed:`${opt.seed||'advisor'}|${frag.clock.weekday}|${minute}`,duration:frag.duration,rate:frag.rate,pulses:frag.pulses};
+ const p={...BASE,cap:frag.capacity,seed:`${opt.seed||'advisor'}|${frag.clock.weekday}|${minute}`,duration:frag.duration,rate:frag.rate,pulses:frag.pulses};
  const ticks=[];for(let t=frag.nowAt-opt.window;t<=frag.nowAt+opt.window;t+=opt.sample)ticks.push(t);
 
  // Pass 1: paired snapshots around "now".

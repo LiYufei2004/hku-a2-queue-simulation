@@ -7,17 +7,23 @@ const at=(weekday,h,m)=>({weekday,seconds:h*3600+m*60});
 // Time-of-day profile (Hong Kong wall clock).
 const clockIs=(wd,sec,total,labels,msg)=>{const r=TP.rateAtClock(wd,sec);assert.equal(r.total,total,msg);assert.deepEqual(r.labels,labels,msg);assert.deepEqual(r.rate,TP.SPLIT.map(f=>total*f))};
 clockIs(1,10*3600+30*60,25,['teaching']);
-clockIs(1,10*3600+52*60,50,['teaching','classEnd']);
+clockIs(1,10*3600+52*60,41,['teaching','classEnd']);
 clockIs(1,11*3600,25,['teaching'],'class-end peak is [:50,:00)');
-clockIs(2,12*3600+30*60,28,['teaching','lunch']);
+clockIs(2,12*3600+30*60,30,['teaching','lunch']);
 clockIs(3,12*3600+55*60,53,['teaching','lunch','classEnd']);
 clockIs(4,18*3600+20*60,30,['teaching','dinner'],'dinner level just under lift capacity');
-clockIs(4,18*3600+55*60,55,['teaching','dinner','classEnd'],'dinner surge = measured extreme 55/min');
+clockIs(4,18*3600+55*60,53,['teaching','dinner','classEnd'],'meal-period class surge uses +23/min');
 clockIs(0,15*3600,12,['weekend']);
 assert.deepEqual(TP.rateAtClock(6,10*3600+50*60).labels,['weekend'],'no class peaks at weekends');
 clockIs(1,3*3600,3,['night']);
 // Field-measured lift throughput: direct 15 per trip / 120 s = 30 people/min; via A1 ~4 per trip at A2 / 200 s = 4.8.
 assert.deepEqual(TP.LIFTS.cycle.map((c,i)=>Math.round(M.capacityMean(TP.LIFTS.cap[i])*TP.LIFTS.lifts/c*60*10)/10),[30,4.8]);
+assert.equal(TP.c1MeanAtClock(1,10*3600+30*60),8,'teaching periods use ordinary C1');
+assert.equal(TP.c1MeanAtClock(1,12*3600+30*60),4,'meal periods use busy C1');
+assert.equal(TP.c1MeanAtClock(1,20*3600),15,'off-peak periods use off-peak C1');
+assert.deepEqual(TP.liftCapsAtClock(1,12*3600+30*60),[17,6]);
+assert.deepEqual(TP.liftCapsAtClock(1,10*3600+30*60),[17,10]);
+assert.deepEqual(TP.liftCapsAtClock(1,20*3600),[17,17]);
 assert.deepEqual(TP.hkParts(Date.UTC(2026,10,2,4,52)),{weekday:1,seconds:12*3600+52*60},'HK is UTC+8 regardless of device zone');
 const frag=TP.paramsAround(at(1,12,55));
 const p={seed:'x',walkModel:'document',spacing:.45,speed:1.3,scale:.025,beta:.05,cap:[20,20],cycle:[40,200],std:[4,20],lifts:4,sample:5,window:300,duration:frag.duration,rate:frag.rate,pulses:frag.pulses};
