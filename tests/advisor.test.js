@@ -21,9 +21,12 @@ assert.deepEqual(TP.LIFTS.cycle.map((c,i)=>Math.round(M.capacityMean(TP.LIFTS.ca
 assert.equal(TP.c1MeanAtClock(1,10*3600+30*60),8,'teaching periods use ordinary C1');
 assert.equal(TP.c1MeanAtClock(1,12*3600+30*60),4,'meal periods use busy C1');
 assert.equal(TP.c1MeanAtClock(1,20*3600),15,'off-peak periods use off-peak C1');
+assert.equal(TP.c1MeanAtClock(0,12*3600+30*60),15,'weekend lunch stays off-peak');
+assert.equal(TP.c1MeanAtClock(6,18*3600+30*60),15,'weekend dinner stays off-peak');
 assert.deepEqual(TP.liftCapsAtClock(1,12*3600+30*60),[17,6]);
 assert.deepEqual(TP.liftCapsAtClock(1,10*3600+30*60),[17,10]);
 assert.deepEqual(TP.liftCapsAtClock(1,20*3600),[17,17]);
+assert.deepEqual(TP.liftCapsAtClock(0,12*3600+30*60),[17,17]);
 assert.deepEqual(TP.hkParts(Date.UTC(2026,10,2,4,52)),{weekday:1,seconds:12*3600+52*60},'HK is UTC+8 regardless of device zone');
 const frag=TP.paramsAround(at(1,12,55));
 const p={seed:'x',walkModel:'document',spacing:.45,speed:1.3,scale:.025,beta:.05,cap:[20,20],cycle:[40,200],std:[4,20],lifts:4,sample:5,window:300,duration:frag.duration,rate:frag.rate,pulses:frag.pulses};
