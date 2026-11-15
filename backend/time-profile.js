@@ -71,6 +71,7 @@ function rateAtClock(weekday,seconds){
 }
 function c1MeanAtClock(weekday,seconds){
  const r=rateAtClock(weekday,seconds);
+ if(weekday===0||weekday===6)return C1_BY_PERIOD.offpeak;
  if(r.labels.includes('lunch')||r.labels.includes('dinner')||r.labels.includes('classEnd'))return C1_BY_PERIOD.busy;
  if(r.labels.includes('teaching'))return C1_BY_PERIOD.ordinary;
  return C1_BY_PERIOD.offpeak;
